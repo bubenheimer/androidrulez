@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2016 Uli Bubenheimer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bubenheimer.android.rulez;
+
+import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import java.lang.ref.WeakReference;
+
+/**
+ * Abstract rule engine missing an evaluation strategy.
+ */
+public abstract class RuleEngine {
+    private static final String TAG = RuleEngine.class.getSimpleName();
+
+    /**
+     * The fact state (bit vector).
+     */
+    private final FactState factState = new FactState(this);
+
+    /**
+     * Listener to be invoked when rule evaluation ends.
+     */
+    @Nullable private EvalEndListener evalEndListener;
+
+    /**
+     * A weak reference to the rule base.
+     */
+    private WeakReference<RuleBase> ruleBaseRef;
+
+    /**
+     * @return the fact state (what's true and what's false)
+     */
+    public final FactState getFactState() {
+        return factState;
+    }
+
+    /**
+     * Clears the rule base and resets the fact state.
+     */
+    @CallSuper
+    public void clear() {
+        if (ruleBaseRef != null) {
+            ruleBaseRef.clear();
+            ruleBaseRef = null;
+        }
+        factState.clear();
+    }
+
+    /**
+     * @return the listener to be invoked when rule evaluation ends. May be null.
+     */
+    public final @Nullable EvalEndListener getEvalEndListener() {
+        return evalEndListener;
+    }
+
+    /**
+     * @param listener the listener to be invoked when rule evaluation ends. May be null.
+     */
+    public final void setEvalEndListener(@Nullable final EvalEndListener listener) {
+        evalEndListener = listener;
+    }
+
+    /**
+     * @return the rule base. May be null.
+     */
+    @Nullable
+    public final RuleBase getRuleBase() {
+        return ruleBaseRef.get();
+    }
+
+    /**
+     * Sets the rule base.
+     * @param ruleBase the rule base. May be null.
+     */
+    public void setRuleBase(final RuleBase ruleBase) {
+        ruleBaseRef = new WeakReference<>(ruleBase);
+    }
+
+    /**
+     * Schedules a rule evaluation step.
+     */
+    protected abstract void scheduleEvaluation();
+
+    /**
+     * To be called by subclasses at the end of a rule evaluation step to notify the rule engine
+     * when evaluation has concluded.
+     */
+    protected final void handleEvaluationEnd() {
+        Log.v(TAG, "Evaluation ended: " + formatState(factState.getState()));
+
+        if (evalEndListener != null) {
+            evalEndListener.onEvalEnd(this);
+        }
+    }
+
+    /**
+     * Convenience method to format the fact state of the rule engine or the rule base evaluation
+     * state as a string in a standard manner (as a bit vector).
+     * @param value the fact state or rule base
+     * @return the standardized string-formatted state
+     */
+    protected static String formatState(final int value) {
+        return Integer.toBinaryString(value);
+    }
+}
