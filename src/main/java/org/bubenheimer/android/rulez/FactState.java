@@ -62,19 +62,19 @@ public final class FactState implements ReadableState, WritableState {
     }
 
     /**
-     * Resets the state, everything is false (no facts added).
+     * Resets the state, all facts turn false (no facts added).
      */
     public void clear() {
         state = 0;
     }
 
     @Override
-    public final void addFact(final Fact fact) {
+    public void addFact(final Fact fact) {
         addFactsInternal(1 << fact.id);
     }
 
     @Override
-    public final void addFacts(final Fact... facts) {
+    public void addFacts(final Fact... facts) {
         int factVector = 0;
         for (final Fact fact : facts) {
             factVector |= 1 << fact.id;
@@ -95,12 +95,12 @@ public final class FactState implements ReadableState, WritableState {
     }
 
     @Override
-    public final void removeFact(final Fact fact) {
+    public void removeFact(final Fact fact) {
         removeFactsInternal(1 << fact.id);
     }
 
     @Override
-    public final void removeFacts(final Fact... facts) {
+    public void removeFacts(final Fact... facts) {
         int factVector = 0;
         for (final Fact fact : facts) {
             factVector |= 1 << fact.id;
@@ -121,12 +121,12 @@ public final class FactState implements ReadableState, WritableState {
     }
 
     @Override
-    public final void addRemoveFacts(final Fact addFact, final Fact removeFact) {
+    public void addRemoveFacts(final Fact addFact, final Fact removeFact) {
         addRemoveFactsInternal(1 << addFact.id, 1 << removeFact.id);
     }
 
     @Override
-    public final void addRemoveFacts(final Fact[] addFacts, final Fact[] removeFacts) {
+    public void addRemoveFacts(final Fact[] addFacts, final Fact[] removeFacts) {
         int addFactVector = 0;
         for (final Fact fact : addFacts) {
             addFactVector |= 1 << fact.id;

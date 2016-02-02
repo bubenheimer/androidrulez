@@ -23,7 +23,7 @@ import org.bubenheimer.android.rulez.RuleBody;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class When {
+public final class When {
     private final Rule rule;
 
     private Collection<Fact> facts = new ArrayList<>();

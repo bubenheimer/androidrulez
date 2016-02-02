@@ -19,7 +19,7 @@ package org.bubenheimer.android.rulez;
 /**
  * A fact
  */
-public class Fact {
+public final class Fact {
     /**
      * The internal fact id
      */

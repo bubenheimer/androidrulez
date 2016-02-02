@@ -65,7 +65,8 @@ public abstract class RuleEngine {
     /**
      * @return the listener to be invoked when rule evaluation ends. May be null.
      */
-    public final @Nullable EvalEndListener getEvalEndListener() {
+    @Nullable
+    public final EvalEndListener getEvalEndListener() {
         return evalEndListener;
     }
 
