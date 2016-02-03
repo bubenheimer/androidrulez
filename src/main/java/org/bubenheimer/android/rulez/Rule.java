@@ -38,7 +38,7 @@ public final class Rule {
     public static final int EXECUTION_TYPE_ONCE = 0;
 
     /**
-     * Specifies to re-evaluate and re-execute a rule once its left-hand side no longer matches
+     * Specifies to re-evaluate and re-execute a rule after its left-hand side no longer matches
      */
     public static final int EXECUTION_TYPE_RESET = 1;
 
@@ -62,17 +62,17 @@ public final class Rule {
     /**
      * The positive facts of the rule's left-hand side.
      */
-    final ArrayList<Integer> premises = new ArrayList<>();
+    final ArrayList<Integer> conditions = new ArrayList<>();
 
     /**
      * The negated facts of the rule's left-hand side.
      */
-    final ArrayList<Integer> negPremises = new ArrayList<>();
+    final ArrayList<Integer> negConditions = new ArrayList<>();
 
     /**
-     * The rule body to execute if the rule matches.
+     * The rule action to execute when the rule fires.
      */
-    RuleBody ruleBody;
+    RuleAction ruleAction;
 
     /**
      * Create a rule.
@@ -95,32 +95,32 @@ public final class Rule {
      * Add a conjunction of facts to the rule's left-hand side.
      * @param facts the conjunction of facts
      */
-    public void addPremise(final Collection<Fact> facts) {
+    public void addCondition(final Collection<Fact> facts) {
         int factVector = 0;
         for (final Fact fact : facts) {
             factVector |= 1 << fact.id;
         }
-        premises.add(factVector);
+        conditions.add(factVector);
     }
 
     /**
      * Add a conjunction of negated facts to the rule's left-hand side.
      * @param facts the conjunction of facts
      */
-    public void addNegPremise(final Collection<Fact> facts) {
+    public void addNegCondition(final Collection<Fact> facts) {
         int factVector = 0;
         for (final Fact fact : facts) {
             factVector |= 1 << fact.id;
         }
-        negPremises.add(factVector);
+        negConditions.add(factVector);
     }
 
     /**
-     * Specifies the rule's executable body (right-hand side)
-     * @param ruleBody the rule body
+     * Specifies the rule's executable action (right-hand side)
+     * @param ruleAction the rule action
      */
-    public void setRuleBody(final RuleBody ruleBody) {
-        this.ruleBody = ruleBody;
+    public void setRuleAction(final RuleAction ruleAction) {
+        this.ruleAction = ruleAction;
     }
 
     @Override
@@ -134,14 +134,14 @@ public final class Rule {
      * @return whether the left-hand side matches the fact state
      */
     boolean eval(final int state) {
-        for (final int premise : premises) {
-            if ((state & premise) != premise) {
+        for (final int condition : conditions) {
+            if ((state & condition) != condition) {
                 return false;
             }
         }
-        //TODO optimization possible for the common case of disjoint negated premises
-        for (final int negPremise : negPremises) {
-            if ((state & negPremise) == negPremise) {
+        //TODO optimization possible for the common case of disjoint negated conditions
+        for (final int negCondition : negConditions) {
+            if ((state & negCondition) == negCondition) {
                 return false;
             }
         }

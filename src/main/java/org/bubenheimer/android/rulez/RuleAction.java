@@ -17,16 +17,16 @@
 package org.bubenheimer.android.rulez;
 
 /**
- * Represents the right-hand side of a rule with code to execute if the left-hand side matches
- * during rule evaluation.
+ * Represents the action (right-hand side) of a rule with code to execute if the left-hand side
+ * matches during rule evaluation.
  */
-public interface RuleBody {
+public interface RuleAction {
     /**
-     * A right-hand side of a rule with code to execute.
+     * A rule action with code to execute.
      * @param oldState the old fact state. Only valid for the duration of this call. Do not store
      *                 a reference to this object.
      * @param newState the new fact state. Only valid for the duration of this call. Do not store
      *                 a reference to this object.
      */
-    void exec(ReadableState oldState, WritableState newState);
+    void fire(ReadableState oldState, WritableState newState);
 }

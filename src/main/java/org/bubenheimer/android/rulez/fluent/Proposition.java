@@ -18,7 +18,7 @@ package org.bubenheimer.android.rulez.fluent;
 
 import org.bubenheimer.android.rulez.Fact;
 import org.bubenheimer.android.rulez.Rule;
-import org.bubenheimer.android.rulez.RuleBody;
+import org.bubenheimer.android.rulez.RuleAction;
 
 /**
  * Represents a rule in the fluent API.
@@ -42,8 +42,8 @@ public final class Proposition {
         return whenNot;
     }
 
-    public Rule then(final RuleBody ruleBody) {
-        rule.setRuleBody(ruleBody);
+    public Rule then(final RuleAction ruleAction) {
+        rule.setRuleAction(ruleAction);
         return rule;
     }
 }

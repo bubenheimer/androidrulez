@@ -20,8 +20,8 @@ import android.util.Log;
 
 /**
  * <p>A rule engine where conceptually the evaluation strategy checks for each rule whether its
- * premise matches the current state, and saves the rule away for later execution.
- * Once all rules have been evaluated, the bodies of all matched rules are executed sequentially.
+ * left-hand side matches the current state, and saves the rule away for later execution.
+ * Once all rules have been evaluated, the actions of all matched rules are executed sequentially.
  * Then the engine checks if the state has changed and starts over.
  * This results in forward-chaining breadth-first rule evaluation.</p>
  *
@@ -35,8 +35,7 @@ public class BreadthFirstRuleEngine extends RuleEngine {
     private static final String TAG = BreadthFirstRuleEngine.class.getSimpleName();
 
     /**
-     * A bit mask for the execution state of all rules. Indicates whether a rule body has already
-     * been executed.
+     * A bit mask for the execution state of all rules. Indicates whether a rule has already fired.
      */
     private int ruleExecutionState = 0;
 
@@ -73,8 +72,8 @@ public class BreadthFirstRuleEngine extends RuleEngine {
     }
 
     /**
-     * @return a bit mask for the execution state of all rules. Indicates whether a rule body has
-     * already been executed.
+     * @return a bit mask for the execution state of all rules. Indicates whether a rule has
+     * already fired.
      */
     protected final int getRuleExecutionState() {
         return ruleExecutionState;
@@ -136,7 +135,7 @@ public class BreadthFirstRuleEngine extends RuleEngine {
                             || (ruleExecutionState & evaluatedMask) == 0) {
                         Log.v(TAG, "Rule fired: " + rule);
                         ruleExecutionState |= evaluatedMask;
-                        rule.ruleBody.exec(baseState, getFactState());
+                        rule.ruleAction.fire(baseState, getFactState());
                     }
                 } else if (rule.executionType == Rule.EXECUTION_TYPE_RESET
                         && (ruleExecutionState & evaluatedMask) != 0) {

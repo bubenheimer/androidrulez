@@ -18,7 +18,7 @@ package org.bubenheimer.android.rulez.fluent;
 
 import org.bubenheimer.android.rulez.Fact;
 import org.bubenheimer.android.rulez.Rule;
-import org.bubenheimer.android.rulez.RuleBody;
+import org.bubenheimer.android.rulez.RuleAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public final class When {
 
     public When or(final Fact fact) {
         if (!facts.isEmpty()) {
-            rule.addPremise(facts);
+            rule.addCondition(facts);
         }
         facts.clear();
         facts.add(fact);
@@ -48,18 +48,18 @@ public final class When {
 
     public WhenNot andNot(final Fact fact) {
         if (!facts.isEmpty()) {
-            rule.addPremise(facts);
+            rule.addCondition(facts);
         }
         final WhenNot whenNot = new WhenNot(rule);
         whenNot.or(fact);
         return whenNot;
     }
 
-    public Rule then(final RuleBody ruleBody) {
+    public Rule then(final RuleAction ruleAction) {
         if (!facts.isEmpty()) {
-            rule.addPremise(facts);
+            rule.addCondition(facts);
         }
-        rule.setRuleBody(ruleBody);
+        rule.setRuleAction(ruleAction);
         return rule;
     }
 }
