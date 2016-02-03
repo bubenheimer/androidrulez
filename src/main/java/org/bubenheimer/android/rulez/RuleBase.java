@@ -58,28 +58,28 @@ public final class RuleBase {
     }
 
     /**
-     * Create a rule via a fluent builder pattern with a default execution type of
-     * {@link Rule#EXECUTION_TYPE_ONCE}.
+     * Create a rule via a fluent builder pattern with a default match type of
+     * {@link Rule#TYPE_MATCH_ONCE}.
      *
      * @param name             rule name
      * @return a builder instance
      */
     public Proposition rule(final String name) {
-        return rule(name, Rule.EXECUTION_TYPE_ONCE);
+        return rule(name, Rule.TYPE_MATCH_ONCE);
     }
 
     /**
      * Create a rule via a fluent builder pattern.
-     * @param name             rule name
-     * @param executionType    rule execution type. Specifies if a rule should run no more than
-     *                         once, or under what conditions it becomes eligible to re-run.
+     * @param name         rule name
+     * @param matchType    rule match type. Specifies if a rule should run no more than once,
+     *                     or under what conditions it becomes eligible to re-run.
      * @return a builder instance
      */
-    public Proposition rule(final String name, @Rule.ExecutionType final int executionType) {
+    public Proposition rule(final String name, @Rule.MatchType final int matchType) {
         if (rules.size() >= MAX_RULES) {
             throw new AssertionError("Too many rules");
         }
-        final Rule rule = new Rule(name, executionType);
+        final Rule rule = new Rule(name, matchType);
         rules.add(rule);
         return new Proposition(rule);
     }

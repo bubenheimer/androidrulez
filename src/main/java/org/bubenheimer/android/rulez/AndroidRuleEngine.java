@@ -61,7 +61,7 @@ public final class AndroidRuleEngine extends BreadthFirstRuleEngine {
         final int factState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_FACTS, 0);
         final int evalState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_EVAL, 0);
         getFactState().setState(factState);
-        setRuleExecutionState(evalState);
+        setRuleMatchState(evalState);
     }
 
     /**
@@ -70,7 +70,7 @@ public final class AndroidRuleEngine extends BreadthFirstRuleEngine {
      */
     public void saveInstanceState(@NonNull final Bundle outState) {
         outState.putInt(INSTANCE_STATE_RULE_ENGINE_FACTS, getFactState().getState());
-        outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, getRuleExecutionState());
+        outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, getRuleMatchState());
     }
 
     /**

@@ -29,23 +29,23 @@ import java.util.Collection;
 public final class Rule {
 
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({EXECUTION_TYPE_ONCE, EXECUTION_TYPE_RESET, EXECUTION_TYPE_ALWAYS})
-    public @interface ExecutionType {}
+    @IntDef({TYPE_MATCH_ONCE, TYPE_MATCH_RESET, TYPE_MATCH_ALWAYS})
+    public @interface MatchType {}
 
     /**
-     * Specifies to evaluate and execute a rule no more than once
+     * Specifies to match and fire a rule no more than once
      */
-    public static final int EXECUTION_TYPE_ONCE = 0;
+    public static final int TYPE_MATCH_ONCE = 0;
 
     /**
-     * Specifies to re-evaluate and re-execute a rule after its left-hand side no longer matches
+     * Specifies to re-match and re-fire a rule after its left-hand side no longer matches
      */
-    public static final int EXECUTION_TYPE_RESET = 1;
+    public static final int TYPE_MATCH_RESET = 1;
 
     /**
-     * Specifies to always re-evaluate and re-execute a rule
+     * Specifies to always re-match and re-fire a rule
      */
-    public static final int EXECUTION_TYPE_ALWAYS = 2;
+    public static final int TYPE_MATCH_ALWAYS = 2;
 
     /**
      * Rule name
@@ -53,11 +53,11 @@ public final class Rule {
     final String name;
 
     /**
-     * Rule execution type. Specifies if a rule should run no more than once, or under what
-     * conditions it becomes eligible to re-run.
+     * Rule match type. Specifies if a rule should match no more than once, or under what
+     * conditions it becomes eligible to re-match.
      */
-    @ExecutionType
-    final int executionType;
+    @MatchType
+    final int matchType;
 
     /**
      * The positive facts of the rule's left-hand side.
@@ -76,12 +76,12 @@ public final class Rule {
 
     /**
      * Create a rule.
-     * @param name             the rule name for debugging
-     * @param executionType    the rule execution type
+     * @param name         the rule name for debugging
+     * @param matchType    the rule match type
      */
-    public Rule(final String name, @ExecutionType final int executionType) {
+    public Rule(final String name, @MatchType final int matchType) {
         this.name = name;
-        this.executionType = executionType;
+        this.matchType = matchType;
     }
 
     /**

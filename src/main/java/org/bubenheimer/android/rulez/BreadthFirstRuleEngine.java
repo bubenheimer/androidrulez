@@ -35,9 +35,9 @@ public class BreadthFirstRuleEngine extends RuleEngine {
     private static final String TAG = BreadthFirstRuleEngine.class.getSimpleName();
 
     /**
-     * A bit mask for the execution state of all rules. Indicates whether a rule has already fired.
+     * A bit mask for the match state of all rules. Indicates whether a rule has already fired.
      */
-    private int ruleExecutionState = 0;
+    private int ruleMatchState = 0;
 
     /**
      * Indicates whether an evaluation of the rule base has been scheduled due to changed state.
@@ -72,29 +72,29 @@ public class BreadthFirstRuleEngine extends RuleEngine {
     }
 
     /**
-     * @return a bit mask for the execution state of all rules. Indicates whether a rule has
+     * @return a bit mask for the match state of all rules. Indicates whether a rule has
      * already fired.
      */
-    protected final int getRuleExecutionState() {
-        return ruleExecutionState;
+    protected final int getRuleMatchState() {
+        return ruleMatchState;
     }
 
     /**
      *
-     * @param state A bit mask for the execution state of all rules.
+     * @param state A bit mask for the match state of all rules.
      */
-    protected final void setRuleExecutionState(final int state) {
-        ruleExecutionState = state;
+    protected final void setRuleMatchState(final int state) {
+        ruleMatchState = state;
     }
 
     public void clear() {
         super.clear();
-        ruleExecutionState = 0;
+        ruleMatchState = 0;
     }
 
     public void setRuleBase(final RuleBase ruleBase) {
         super.setRuleBase(ruleBase);
-        ruleExecutionState = 0;
+        ruleMatchState = 0;
     }
 
     protected void scheduleEvaluation() {
@@ -128,19 +128,19 @@ public class BreadthFirstRuleEngine extends RuleEngine {
         final int ruleCount = ruleBase.rules.size();
         for (int i = 0; i < ruleCount; ++i) {
             final Rule rule = ruleBase.rules.get(i);
-            if (rule.executionType != Rule.EXECUTION_TYPE_ONCE
-                    || (ruleExecutionState & evaluatedMask) == 0) {
+            if (rule.matchType != Rule.TYPE_MATCH_ONCE
+                    || (ruleMatchState & evaluatedMask) == 0) {
                 if (rule.eval(baseState.state)) {
-                    if (rule.executionType == Rule.EXECUTION_TYPE_ALWAYS
-                            || (ruleExecutionState & evaluatedMask) == 0) {
+                    if (rule.matchType == Rule.TYPE_MATCH_ALWAYS
+                            || (ruleMatchState & evaluatedMask) == 0) {
                         Log.v(TAG, "Rule fired: " + rule);
-                        ruleExecutionState |= evaluatedMask;
+                        ruleMatchState |= evaluatedMask;
                         rule.ruleAction.fire(baseState, getFactState());
                     }
-                } else if (rule.executionType == Rule.EXECUTION_TYPE_RESET
-                        && (ruleExecutionState & evaluatedMask) != 0) {
+                } else if (rule.matchType == Rule.TYPE_MATCH_RESET
+                        && (ruleMatchState & evaluatedMask) != 0) {
                     Log.v(TAG, "Rule reset: " + rule);
-                    ruleExecutionState ^= evaluatedMask;
+                    ruleMatchState ^= evaluatedMask;
                 }
             }
             evaluatedMask <<= 1;
