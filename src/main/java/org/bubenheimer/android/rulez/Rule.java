@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A rule
@@ -85,10 +87,17 @@ public final class Rule {
     }
 
     /**
-     * @return the rule name for debugging
+     * @return the rule name
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return the match type
+     */
+    public int getMatchType() {
+        return matchType;
     }
 
     /**
@@ -121,6 +130,26 @@ public final class Rule {
      */
     public void setRuleAction(final RuleAction ruleAction) {
         this.ruleAction = ruleAction;
+    }
+
+    /**
+     * Retrieve the conjunctions of facts from the rule's left-hand side in the native
+     * integer format. Not recommended for performance-critical operations.
+     *
+     * @return the rule's conjunctions of facts
+     */
+    public List<Integer> getNativeConditions() {
+        return Collections.unmodifiableList(conditions);
+    }
+
+    /**
+     * Retrieve the conjunctions of negated facts from the rule's left-hand side in the native
+     * integer format. Not recommended for performance-critical operations.
+     *
+     * @return the rule's conjunctions of negated facts
+     */
+    public List<Integer> getNativeNegConditions() {
+        return Collections.unmodifiableList(negConditions);
     }
 
     @Override
