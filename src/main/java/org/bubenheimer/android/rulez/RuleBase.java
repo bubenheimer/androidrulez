@@ -57,6 +57,10 @@ public final class RuleBase {
         }
     }
 
+    public int getFactCount() {
+        return factIdCounter;
+    }
+
     /**
      * Create a rule via a fluent builder pattern with a default match type of
      * {@link Rule#TYPE_MATCH_ONCE}.

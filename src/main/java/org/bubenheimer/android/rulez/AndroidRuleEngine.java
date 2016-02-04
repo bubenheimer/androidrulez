@@ -29,7 +29,7 @@ import android.support.annotation.NonNull;
  *
  * <p>Not thread-safe. Typically used on the UI thread.</p>
  */
-public final class AndroidRuleEngine extends BreadthFirstRuleEngine {
+public class AndroidRuleEngine extends BreadthFirstRuleEngine {
     /**
      * Instance state key for saving fact state.
      */
@@ -47,11 +47,15 @@ public final class AndroidRuleEngine extends BreadthFirstRuleEngine {
     /**
      * The {@link Runnable} to post for scheduling rule evaluation.
      */
-    private final Runnable evaluator = new Evaluator();
+    private Runnable evaluator = new Evaluator();
     /**
      * The {@link Handler} to post to.
      */
     private final Handler handler = new Handler();
+
+    protected final void setEvaluator(final Runnable evaluator) {
+        this.evaluator = evaluator;
+    }
 
     /**
      * Restores rule engine state.
@@ -103,7 +107,7 @@ public final class AndroidRuleEngine extends BreadthFirstRuleEngine {
     /**
      * The {@link Runnable} to execute for rule base evaluation.
      */
-    private final class Evaluator implements Runnable {
+    protected class Evaluator implements Runnable {
         @Override
         public void run() {
             evaluationScheduled = false;

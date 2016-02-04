@@ -48,9 +48,9 @@ public final class FactState implements ReadableState, WritableState {
     }
 
     /**
-     * @return the state (what's true and what's false)
+     * @return the raw state bit vector (indicating what's true and what's false)
      */
-    int getState() {
+    public int getState() {
         return state;
     }
 
