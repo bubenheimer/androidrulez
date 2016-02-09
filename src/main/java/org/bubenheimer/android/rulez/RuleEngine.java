@@ -16,6 +16,7 @@
 
 package org.bubenheimer.android.rulez;
 
+import android.content.SharedPreferences;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -86,11 +87,29 @@ public abstract class RuleEngine {
     }
 
     /**
-     * Sets the rule base.
-     * @param ruleBase the rule base. May be null.
+     * Sets the rule base. If the rule base is not {@code null},
+     * it needs to be completely initialized.
+     *
+     * @param ruleBase the rule base. May be {@code null}.
      */
     public void setRuleBase(final RuleBase ruleBase) {
         ruleBaseRef = new WeakReference<>(ruleBase);
+        if (ruleBase != null) {
+            final SharedPreferences sharedPreferences = ruleBase.sharedPreferences;
+            if (sharedPreferences != null) {
+                final int factCount = ruleBase.getFactCount();
+                int initState = factState.getState();
+                for (int i = 0; i < factCount; ++i) {
+                    final Fact fact = ruleBase.facts[i];
+                    if (fact.persistence == Fact.PERSISTENCE_DISK) {
+                        if (sharedPreferences.getBoolean(fact.name, false)) {
+                            initState |= 1 << fact.id;
+                        }
+                    }
+                }
+                factState.setState(initState);
+            }
+        }
     }
 
     /**

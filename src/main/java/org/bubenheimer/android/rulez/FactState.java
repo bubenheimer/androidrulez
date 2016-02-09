@@ -16,6 +16,7 @@
 
 package org.bubenheimer.android.rulez;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -70,14 +71,18 @@ public final class FactState implements ReadableState, WritableState {
 
     @Override
     public void addFact(final Fact fact) {
-        addFactsInternal(1 << fact.id);
+        final int factMask = 1 << fact.id;
+        checkFactChange(fact, factMask, true);
+        addFactsInternal(factMask);
     }
 
     @Override
     public void addFacts(final Fact... facts) {
         int factVector = 0;
         for (final Fact fact : facts) {
-            factVector |= 1 << fact.id;
+            final int factMask = 1 << fact.id;
+            checkFactChange(fact, factMask, true);
+            factVector |= factMask;
         }
         addFactsInternal(factVector);
     }
@@ -96,14 +101,18 @@ public final class FactState implements ReadableState, WritableState {
 
     @Override
     public void removeFact(final Fact fact) {
-        removeFactsInternal(1 << fact.id);
+        final int factMask = 1 << fact.id;
+        checkFactChange(fact, factMask, false);
+        removeFactsInternal(factMask);
     }
 
     @Override
     public void removeFacts(final Fact... facts) {
         int factVector = 0;
         for (final Fact fact : facts) {
-            factVector |= 1 << fact.id;
+            final int factMask = 1 << fact.id;
+            checkFactChange(fact, factMask, false);
+            factVector |= factMask;
         }
         removeFactsInternal(factVector);
     }
@@ -122,18 +131,26 @@ public final class FactState implements ReadableState, WritableState {
 
     @Override
     public void addRemoveFacts(final Fact addFact, final Fact removeFact) {
-        addRemoveFactsInternal(1 << addFact.id, 1 << removeFact.id);
+        final int addFactMask = 1 << addFact.id;
+        checkFactChange(addFact, addFactMask, true);
+        final int removeFactMask = 1 << removeFact.id;
+        checkFactChange(removeFact, removeFactMask, false);
+        addRemoveFactsInternal(addFactMask, removeFactMask);
     }
 
     @Override
     public void addRemoveFacts(final Fact[] addFacts, final Fact[] removeFacts) {
         int addFactVector = 0;
         for (final Fact fact : addFacts) {
-            addFactVector |= 1 << fact.id;
+            final int factMask = 1 << fact.id;
+            checkFactChange(fact, factMask, true);
+            addFactVector |= factMask;
         }
         int removeFactVector = 0;
         for (final Fact fact : removeFacts) {
-            removeFactVector |= 1 << fact.id;
+            final int factMask = 1 << fact.id;
+            checkFactChange(fact, factMask, false);
+            removeFactVector |= factMask;
         }
         addRemoveFactsInternal(addFactVector, removeFactVector);
     }
@@ -158,6 +175,20 @@ public final class FactState implements ReadableState, WritableState {
     private void stateChangeEval(final int oldState) {
         if (oldState != state) {
             ruleEngine.scheduleEvaluation();
+        }
+    }
+
+    private void checkFactChange(final Fact fact, final int factMask, final boolean isSet) {
+        if (fact.persistence == Fact.PERSISTENCE_DISK) {
+            final RuleBase ruleBase = ruleEngine.getRuleBase();
+            assert ruleBase != null;
+            final SharedPreferences sharedPreferences = ruleBase.sharedPreferences;
+            if (sharedPreferences != null) {
+                if (isSet && (state | factMask) != state ||
+                        !isSet && (state & ~factMask) != state) {
+                    sharedPreferences.edit().putBoolean(fact.name, isSet).apply();
+                }
+            }
         }
     }
 }

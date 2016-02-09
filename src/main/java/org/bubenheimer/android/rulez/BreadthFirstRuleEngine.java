@@ -128,16 +128,16 @@ public class BreadthFirstRuleEngine extends RuleEngine {
         final int ruleCount = ruleBase.rules.size();
         for (int i = 0; i < ruleCount; ++i) {
             final Rule rule = ruleBase.rules.get(i);
-            if (rule.matchType != Rule.TYPE_MATCH_ONCE
+            if (rule.matchType != Rule.MATCH_ONCE
                     || (ruleMatchState & evaluatedMask) == 0) {
                 if (rule.eval(baseState.state)) {
-                    if (rule.matchType == Rule.TYPE_MATCH_ALWAYS
+                    if (rule.matchType == Rule.MATCH_ALWAYS
                             || (ruleMatchState & evaluatedMask) == 0) {
                         Log.v(TAG, "Rule fired: " + rule);
                         ruleMatchState |= evaluatedMask;
                         rule.ruleAction.fire(baseState, getFactState());
                     }
-                } else if (rule.matchType == Rule.TYPE_MATCH_RESET
+                } else if (rule.matchType == Rule.MATCH_RESET
                         && (ruleMatchState & evaluatedMask) != 0) {
                     Log.v(TAG, "Rule reset: " + rule);
                     ruleMatchState ^= evaluatedMask;

@@ -16,6 +16,8 @@
 
 package org.bubenheimer.android.rulez;
 
+import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.bubenheimer.android.rulez.fluent.Proposition;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 /**
  * The rule engine's collection of rules
  */
-public final class RuleBase {
+public class RuleBase {
     private static final String TAG = RuleBase.class.getSimpleName();
 
     /** Maximum number of facts. Change this to {@code 64} if long is used instead of int to
@@ -36,6 +38,8 @@ public final class RuleBase {
      * represent the rule base state. */
     public static final int MAX_RULES = 32;
 
+    final Fact[] facts = new Fact[MAX_FACTS];
+
     private int factIdCounter = 0;
 
     /**
@@ -43,17 +47,41 @@ public final class RuleBase {
      */
     final ArrayList<Rule> rules = new ArrayList<>(MAX_RULES);
 
+    //TODO provide a slightly more elaborate persistence API to eliminate tight coupling
+    @Nullable
+    SharedPreferences sharedPreferences;
+
     /**
-     * Create a new fact
+     * @param sharedPreferences    a dedicated sharedPreferences object for saving and restoring
+     *                             persistent fact state. May be null to not save persistent state.
+     */
+    public void setSharedPreferences(@Nullable final SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
+
+    /**
+     * Create a new fact with no fact state persistence.
      * @param name fact name for debugging
      * @return the new fact
      */
     public Fact newFact(final String name) {
+        return newFact(name, Fact.PERSISTENCE_NONE);
+    }
+
+    /**
+     * Create a new fact
+     * @param name          fact name for debugging
+     * @param persistence   fact state persistence
+     * @return the new fact
+     */
+    public Fact newFact(final String name, @Fact.Persistence final int persistence) {
         if (factIdCounter >= MAX_FACTS) {
             throw new AssertionError("Too many facts");
         } else {
             Log.v(TAG, "ID " + String.format("%2d", factIdCounter) + " for new fact " + name);
-            return new Fact(factIdCounter++);
+            final Fact fact = new Fact(factIdCounter, name, persistence);
+            facts[factIdCounter++] = fact;
+            return fact;
         }
     }
 
@@ -63,13 +91,13 @@ public final class RuleBase {
 
     /**
      * Create a rule via a fluent builder pattern with a default match type of
-     * {@link Rule#TYPE_MATCH_ONCE}.
+     * {@link Rule#MATCH_ALWAYS}.
      *
-     * @param name             rule name
+     * @param name rule name
      * @return a builder instance
      */
     public Proposition rule(final String name) {
-        return rule(name, Rule.TYPE_MATCH_ONCE);
+        return rule(name, Rule.MATCH_ALWAYS);
     }
 
     /**

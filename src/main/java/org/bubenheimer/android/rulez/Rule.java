@@ -30,24 +30,27 @@ import java.util.List;
  */
 public final class Rule {
 
+    /**
+     * Match eligibility type. Specifies whether a rule may match repeatedly or only once.
+     */
     @Retention(RetentionPolicy.SOURCE)
-    @IntDef({TYPE_MATCH_ONCE, TYPE_MATCH_RESET, TYPE_MATCH_ALWAYS})
+    @IntDef({MATCH_ONCE, MATCH_RESET, MATCH_ALWAYS})
     public @interface MatchType {}
 
     /**
      * Specifies to match and fire a rule no more than once
      */
-    public static final int TYPE_MATCH_ONCE = 0;
+    public static final int MATCH_ONCE = 0;
 
     /**
      * Specifies to re-match and re-fire a rule after its left-hand side no longer matches
      */
-    public static final int TYPE_MATCH_RESET = 1;
+    public static final int MATCH_RESET = 1;
 
     /**
      * Specifies to always re-match and re-fire a rule
      */
-    public static final int TYPE_MATCH_ALWAYS = 2;
+    public static final int MATCH_ALWAYS = 2;
 
     /**
      * Rule name
