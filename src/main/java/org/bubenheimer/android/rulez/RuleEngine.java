@@ -52,7 +52,7 @@ public abstract class RuleEngine {
     }
 
     /**
-     * Clears the rule base and resets the fact state.
+     * Clears the rule base and clears the rule engine state.
      */
     @CallSuper
     public void clear() {
@@ -60,6 +60,14 @@ public abstract class RuleEngine {
             ruleBaseRef.clear();
             ruleBaseRef = null;
         }
+        clearState();
+    }
+
+    /**
+     * Clears the rule engine state
+     */
+    @CallSuper
+    public void clearState() {
         factState.clear();
     }
 

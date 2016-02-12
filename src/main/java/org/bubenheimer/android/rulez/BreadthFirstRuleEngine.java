@@ -87,16 +87,19 @@ public class BreadthFirstRuleEngine extends RuleEngine {
         ruleMatchState = state;
     }
 
-    public void clear() {
-        super.clear();
+    @Override
+    public void clearState() {
+        super.clearState();
         ruleMatchState = 0;
     }
 
+    @Override
     public void setRuleBase(final RuleBase ruleBase) {
         super.setRuleBase(ruleBase);
         ruleMatchState = 0;
     }
 
+    @Override
     protected void scheduleEvaluation() {
         if (isEvaluating) {
             evaluationScheduled = true;
