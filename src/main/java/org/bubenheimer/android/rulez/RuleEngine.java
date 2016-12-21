@@ -26,6 +26,7 @@ import java.lang.ref.WeakReference;
 /**
  * Abstract rule engine missing an evaluation strategy.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class RuleEngine {
     private static final String TAG = RuleEngine.class.getSimpleName();
 
@@ -47,6 +48,7 @@ public abstract class RuleEngine {
     /**
      * @return the fact state (what's true and what's false)
      */
+    @SuppressWarnings("WeakerAccess")
     public final FactState getFactState() {
         return factState;
     }
@@ -54,6 +56,7 @@ public abstract class RuleEngine {
     /**
      * Clears the rule base and clears the rule engine state.
      */
+    @SuppressWarnings("unused")
     @CallSuper
     public void clear() {
         if (ruleBaseRef != null) {
@@ -74,6 +77,7 @@ public abstract class RuleEngine {
     /**
      * @return the listener to be invoked when rule evaluation ends. May be null.
      */
+    @SuppressWarnings("unused")
     @Nullable
     public final EvalEndListener getEvalEndListener() {
         return evalEndListener;
@@ -82,6 +86,7 @@ public abstract class RuleEngine {
     /**
      * @param listener the listener to be invoked when rule evaluation ends. May be null.
      */
+    @SuppressWarnings("WeakerAccess")
     public final void setEvalEndListener(@Nullable final EvalEndListener listener) {
         evalEndListener = listener;
     }
@@ -89,6 +94,7 @@ public abstract class RuleEngine {
     /**
      * @return the rule base. May be null.
      */
+    @SuppressWarnings("WeakerAccess")
     @Nullable
     public final RuleBase getRuleBase() {
         return ruleBaseRef.get();
@@ -129,6 +135,8 @@ public abstract class RuleEngine {
      * To be called by subclasses at the end of a rule evaluation step to notify the rule engine
      * when evaluation has concluded.
      */
+    @SuppressWarnings("WeakerAccess")
+    @CallSuper
     protected final void handleEvaluationEnd() {
         Log.v(TAG, "Evaluation ended: " + formatState(factState.getState()));
 
@@ -143,6 +151,7 @@ public abstract class RuleEngine {
      * @param value the fact state or rule base
      * @return the standardized string-formatted state
      */
+    @SuppressWarnings("WeakerAccess")
     protected static String formatState(final int value) {
         return Integer.toBinaryString(value);
     }

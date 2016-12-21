@@ -18,10 +18,12 @@ package org.bubenheimer.android.rulez;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import android.util.Log;
 
 import static org.bubenheimer.android.rulez.RuleEngine.formatState;
 
+@SuppressWarnings("WeakerAccess")
 public final class FactState implements ReadableState, WritableState {
     private static final String TAG = FactState.class.getSimpleName();
 
@@ -39,6 +41,7 @@ public final class FactState implements ReadableState, WritableState {
     /**
      * @param ruleEngine the associated rule engine
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     FactState(@NonNull final RuleEngine ruleEngine) {
         this.ruleEngine = ruleEngine;
     }
@@ -58,6 +61,7 @@ public final class FactState implements ReadableState, WritableState {
     /**
      * @param state the state
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     void setState(final int state) {
         this.state = state;
     }
@@ -65,6 +69,7 @@ public final class FactState implements ReadableState, WritableState {
     /**
      * Resets the state, all facts turn false (no facts added).
      */
+    @SuppressWarnings("WeakerAccess")
     public void clear() {
         state = 0;
     }

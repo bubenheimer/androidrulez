@@ -18,6 +18,7 @@ package org.bubenheimer.android.rulez;
 
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import android.util.Log;
 
 import org.bubenheimer.android.rulez.fluent.Proposition;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 /**
  * The rule engine's collection of rules
  */
+@SuppressWarnings("WeakerAccess")
 public class RuleBase {
     private static final String TAG = RuleBase.class.getSimpleName();
 
@@ -45,9 +47,11 @@ public class RuleBase {
     /**
      * The rules
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     final ArrayList<Rule> rules = new ArrayList<>(MAX_RULES);
 
     //TODO provide a slightly more elaborate persistence API to eliminate tight coupling
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Nullable
     SharedPreferences sharedPreferences;
 
@@ -55,6 +59,7 @@ public class RuleBase {
      * @param sharedPreferences    a dedicated sharedPreferences object for saving and restoring
      *                             persistent fact state. May be null to not save persistent state.
      */
+    @SuppressWarnings("unused")
     public void setSharedPreferences(@Nullable final SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
     }
@@ -64,6 +69,7 @@ public class RuleBase {
      * @param name fact name for debugging
      * @return the new fact
      */
+    @SuppressWarnings("unused")
     public Fact newFact(final String name) {
         return newFact(name, Fact.PERSISTENCE_NONE);
     }
@@ -74,7 +80,9 @@ public class RuleBase {
      * @param persistence   fact state persistence
      * @return the new fact
      */
-    public Fact newFact(final String name, @Fact.Persistence final int persistence) {
+    public Fact newFact(
+            final String name,
+            @SuppressWarnings("SameParameterValue") @Fact.Persistence final int persistence) {
         if (factIdCounter >= MAX_FACTS) {
             throw new AssertionError("Too many facts");
         } else {
@@ -107,7 +115,9 @@ public class RuleBase {
      *                     or under what conditions it becomes eligible to re-run.
      * @return a builder instance
      */
-    public Proposition rule(final String name, @Rule.MatchType final int matchType) {
+    public Proposition rule(
+            final String name,
+            @SuppressWarnings("SameParameterValue") @Rule.MatchType final int matchType) {
         if (rules.size() >= MAX_RULES) {
             throw new AssertionError("Too many rules");
         }

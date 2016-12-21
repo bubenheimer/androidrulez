@@ -20,6 +20,7 @@ package org.bubenheimer.android.rulez;
  * Listener to be invoked when rule evaluation ends.
  * Set this via {@link RuleEngine#setEvalEndListener(EvalEndListener)}.
  */
+@SuppressWarnings("WeakerAccess")
 public interface EvalEndListener {
     /**
      * Invoked when rule evaluation ends.

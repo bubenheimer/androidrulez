@@ -23,10 +23,11 @@ import org.bubenheimer.android.rulez.RuleAction;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@SuppressWarnings("WeakerAccess")
 public final class When {
     private final Rule rule;
 
-    private Collection<Fact> facts = new ArrayList<>();
+    private final Collection<Fact> facts = new ArrayList<>();
 
     When(final Rule rule) {
         this.rule = rule;
@@ -37,6 +38,7 @@ public final class When {
         return this;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public When or(final Fact fact) {
         if (!facts.isEmpty()) {
             rule.addCondition(facts);
@@ -46,6 +48,7 @@ public final class When {
         return this;
     }
 
+    @SuppressWarnings("unused")
     public WhenNot andNot(final Fact fact) {
         if (!facts.isEmpty()) {
             rule.addCondition(facts);
@@ -55,6 +58,7 @@ public final class When {
         return whenNot;
     }
 
+    @SuppressWarnings("unused")
     public Rule then(final RuleAction ruleAction) {
         if (!facts.isEmpty()) {
             rule.addCondition(facts);

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 
 /**
  * <p>A variation of {@link BreadthFirstRuleEngine} where rule evaluations are scheduled for a
@@ -29,6 +30,7 @@ import android.support.annotation.NonNull;
  *
  * <p>Not thread-safe. Typically used on the UI thread.</p>
  */
+@SuppressWarnings("unused")
 public class AndroidRuleEngine extends BreadthFirstRuleEngine {
     /**
      * Instance state key for saving fact state.
@@ -53,6 +55,8 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
      */
     private final Handler handler = new Handler();
 
+    @SuppressWarnings("unused")
+    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
     protected final void setEvaluator(final Runnable evaluator) {
         this.evaluator = evaluator;
     }
@@ -61,6 +65,7 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
      * Restores rule engine state.
      * @param savedInstanceState the saved state
      */
+    @SuppressWarnings("unused")
     public void restoreInstanceState(@NonNull final Bundle savedInstanceState) {
         final int factState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_FACTS, 0);
         final int evalState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_EVAL, 0);
@@ -72,6 +77,7 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
      * Saves rule engine state.
      * @param outState the saved state
      */
+    @SuppressWarnings("unused")
     public void saveInstanceState(@NonNull final Bundle outState) {
         outState.putInt(INSTANCE_STATE_RULE_ENGINE_FACTS, getFactState().getState());
         outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, getRuleMatchState());
@@ -81,6 +87,7 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
      * Start rule base evaluation. Should be invoked from {@link Activity#onStart()} or equivalent
      * methods in {@code Activity} or {@code Fragment} classes.
      */
+    @SuppressWarnings("unused")
     public void start() {
         scheduleEvaluation();
     }
@@ -107,6 +114,8 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
     /**
      * The {@link Runnable} to execute for rule base evaluation.
      */
+    @SuppressWarnings("WeakerAccess")
+    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
     protected class Evaluator implements Runnable {
         @Override
         public void run() {

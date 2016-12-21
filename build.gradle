@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-group = GROUP
-version = VERSION_NAME
-
 buildscript {
     repositories {
-        jcenter()
+        maven { url MAVEN_REPOSITORY_URL}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0-beta1'
     }
 }
 
 repositories {
-    jcenter()
+    maven { url MAVEN_REPOSITORY_URL}
 }
 
 apply plugin: 'com.android.library'
 
 android {
+    lintOptions {
+        baseline file('lint-baseline.xml')
+    }
+
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         minSdkVersion 9
@@ -58,7 +59,7 @@ android {
     }
 
     dependencies {
-        compile 'com.android.support:support-annotations:25.0.1'
+        compile 'com.android.support:support-annotations:25.1.0'
     }
 }
 

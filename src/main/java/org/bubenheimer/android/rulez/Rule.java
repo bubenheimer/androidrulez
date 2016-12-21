@@ -17,6 +17,7 @@
 package org.bubenheimer.android.rulez;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.RestrictTo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,6 +34,7 @@ public final class Rule {
     /**
      * Match eligibility type. Specifies whether a rule may match repeatedly or only once.
      */
+    @SuppressWarnings("WeakerAccess")
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({MATCH_ONCE, MATCH_RESET, MATCH_ALWAYS})
     public @interface MatchType {}
@@ -40,43 +42,48 @@ public final class Rule {
     /**
      * Specifies to match and fire a rule no more than once
      */
+    @SuppressWarnings("WeakerAccess")
     public static final int MATCH_ONCE = 0;
 
     /**
      * Specifies to re-match and re-fire a rule after its left-hand side no longer matches
      */
+    @SuppressWarnings("WeakerAccess")
     public static final int MATCH_RESET = 1;
 
     /**
      * Specifies to always re-match and re-fire a rule
      */
+    @SuppressWarnings("WeakerAccess")
     public static final int MATCH_ALWAYS = 2;
 
     /**
      * Rule name
      */
-    final String name;
+    private final String name;
 
     /**
      * Rule match type. Specifies if a rule should match no more than once, or under what
      * conditions it becomes eligible to re-match.
      */
     @MatchType
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     final int matchType;
 
     /**
      * The positive facts of the rule's left-hand side.
      */
-    final ArrayList<Integer> conditions = new ArrayList<>();
+    private final ArrayList<Integer> conditions = new ArrayList<>();
 
     /**
      * The negated facts of the rule's left-hand side.
      */
-    final ArrayList<Integer> negConditions = new ArrayList<>();
+    private final ArrayList<Integer> negConditions = new ArrayList<>();
 
     /**
      * The rule action to execute when the rule fires.
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     RuleAction ruleAction;
 
     /**
@@ -84,6 +91,7 @@ public final class Rule {
      * @param name         the rule name for debugging
      * @param matchType    the rule match type
      */
+    @SuppressWarnings("WeakerAccess")
     public Rule(final String name, @MatchType final int matchType) {
         this.name = name;
         this.matchType = matchType;
@@ -92,6 +100,7 @@ public final class Rule {
     /**
      * @return the rule name
      */
+    @SuppressWarnings("unused")
     public String getName() {
         return name;
     }
@@ -99,6 +108,7 @@ public final class Rule {
     /**
      * @return the match type
      */
+    @SuppressWarnings("unused")
     public int getMatchType() {
         return matchType;
     }
@@ -141,6 +151,7 @@ public final class Rule {
      *
      * @return the rule's conjunctions of facts
      */
+    @SuppressWarnings("unused")
     public List<Integer> getNativeConditions() {
         return Collections.unmodifiableList(conditions);
     }
@@ -151,6 +162,7 @@ public final class Rule {
      *
      * @return the rule's conjunctions of negated facts
      */
+    @SuppressWarnings("unused")
     public List<Integer> getNativeNegConditions() {
         return Collections.unmodifiableList(negConditions);
     }
@@ -165,6 +177,7 @@ public final class Rule {
      * @param state the fact state to use for evaluation
      * @return whether the left-hand side matches the fact state
      */
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     boolean eval(final int state) {
         for (final int condition : conditions) {
             if ((state & condition) != condition) {

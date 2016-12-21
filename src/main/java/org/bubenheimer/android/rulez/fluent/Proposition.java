@@ -30,18 +30,21 @@ public final class Proposition {
         this.rule = rule;
     }
 
+    @SuppressWarnings("unused")
     public When when(final Fact fact) {
         final When when = new When(rule);
         when.or(fact);
         return when;
     }
 
+    @SuppressWarnings("unused")
     public WhenNot whenNot(final Fact fact) {
         final WhenNot whenNot = new WhenNot(rule);
         whenNot.or(fact);
         return whenNot;
     }
 
+    @SuppressWarnings("unused")
     public Rule then(final RuleAction ruleAction) {
         rule.setRuleAction(ruleAction);
         return rule;

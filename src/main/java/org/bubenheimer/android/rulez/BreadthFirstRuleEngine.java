@@ -16,6 +16,7 @@
 
 package org.bubenheimer.android.rulez;
 
+import android.support.annotation.RestrictTo;
 import android.util.Log;
 
 /**
@@ -31,6 +32,7 @@ import android.util.Log;
  * <p>Not thread-safe.</p>
  *
  */
+@SuppressWarnings("WeakerAccess")
 public class BreadthFirstRuleEngine extends RuleEngine {
     private static final String TAG = BreadthFirstRuleEngine.class.getSimpleName();
 
@@ -75,6 +77,8 @@ public class BreadthFirstRuleEngine extends RuleEngine {
      * @return a bit mask for the match state of all rules. Indicates whether a rule has
      * already fired.
      */
+    @SuppressWarnings("WeakerAccess")
+    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
     protected final int getRuleMatchState() {
         return ruleMatchState;
     }
@@ -83,6 +87,8 @@ public class BreadthFirstRuleEngine extends RuleEngine {
      *
      * @param state A bit mask for the match state of all rules.
      */
+    @SuppressWarnings("WeakerAccess")
+    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
     protected final void setRuleMatchState(final int state) {
         ruleMatchState = state;
     }
@@ -120,6 +126,8 @@ public class BreadthFirstRuleEngine extends RuleEngine {
     /**
      * Evaluates the rule base.
      */
+    @SuppressWarnings("WeakerAccess")
+    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
     protected final void evaluate() {
         final RuleBase ruleBase = getRuleBase();
         if (ruleBase == null) {
