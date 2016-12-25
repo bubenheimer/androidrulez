@@ -19,7 +19,8 @@ package org.bubenheimer.android.rulez;
 import android.content.SharedPreferences;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.util.Log;
+
+import org.bubenheimer.android.log.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -138,7 +139,7 @@ public abstract class RuleEngine {
     @SuppressWarnings("WeakerAccess")
     @CallSuper
     protected final void handleEvaluationEnd() {
-        Log.v(TAG, "Evaluation ended: " + formatState(factState.getState()));
+        Log.v(TAG, "Evaluation ended: ", formatState(factState.getState()));
 
         if (evalEndListener != null) {
             evalEndListener.onEvalEnd(this);

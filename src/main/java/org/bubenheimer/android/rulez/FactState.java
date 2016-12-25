@@ -19,7 +19,8 @@ package org.bubenheimer.android.rulez;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import android.util.Log;
+
+import org.bubenheimer.android.log.Log;
 
 import static org.bubenheimer.android.rulez.RuleEngine.formatState;
 
@@ -99,8 +100,8 @@ public final class FactState implements ReadableState, WritableState {
     private void addFactsInternal(final int factVector) {
         final int oldState = state;
         state |= factVector;
-        Log.v(TAG, "State change: " + formatState(oldState) + " + " + formatState(factVector)
-                + " = " + formatState(state));
+        Log.v(TAG, "State change: ", formatState(oldState), " + ", formatState(factVector), " = ",
+                formatState(state));
         stateChangeEval(oldState);
     }
 
@@ -129,8 +130,8 @@ public final class FactState implements ReadableState, WritableState {
     private void removeFactsInternal(final int factVector) {
         final int oldState = state;
         state &= ~factVector;
-        Log.v(TAG, "State change: " + formatState(oldState) + " - " + formatState(factVector)
-                + " = " + formatState(state));
+        Log.v(TAG, "State change: ", formatState(oldState), " - ", formatState(factVector), " = ",
+                formatState(state));
         stateChangeEval(oldState);
     }
 
@@ -168,8 +169,8 @@ public final class FactState implements ReadableState, WritableState {
     private void addRemoveFactsInternal(final int addFactVector, final int removeFactVector) {
         final int oldState = state;
         state = (state | addFactVector) & ~removeFactVector;
-        Log.v(TAG, "State change: " + formatState(oldState) + " + " + formatState(addFactVector)
-                + " - " + formatState(removeFactVector) + " = " + formatState(state));
+        Log.v(TAG, "State change: ", formatState(oldState), " + ", formatState(addFactVector),
+                " - ", formatState(removeFactVector), " = ", formatState(state));
         stateChangeEval(oldState);
     }
 

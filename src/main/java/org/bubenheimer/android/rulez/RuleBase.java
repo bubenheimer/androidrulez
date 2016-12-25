@@ -19,11 +19,12 @@ package org.bubenheimer.android.rulez;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
-import android.util.Log;
 
+import org.bubenheimer.android.log.Log;
 import org.bubenheimer.android.rulez.fluent.Proposition;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * The rule engine's collection of rules
@@ -86,7 +87,8 @@ public class RuleBase {
         if (factIdCounter >= MAX_FACTS) {
             throw new AssertionError("Too many facts");
         } else {
-            Log.v(TAG, "ID " + String.format("%2d", factIdCounter) + " for new fact " + name);
+            Log.v(TAG, "ID ", String.format(Locale.getDefault(), "%2d", factIdCounter),
+                    " for new fact ", name);
             final Fact fact = new Fact(factIdCounter, name, persistence);
             facts[factIdCounter++] = fact;
             return fact;

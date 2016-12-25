@@ -17,7 +17,8 @@
 package org.bubenheimer.android.rulez;
 
 import android.support.annotation.RestrictTo;
-import android.util.Log;
+
+import org.bubenheimer.android.log.Log;
 
 /**
  * <p>A rule engine where conceptually the evaluation strategy checks for each rule whether its
@@ -134,7 +135,7 @@ public class BreadthFirstRuleEngine extends RuleEngine {
             return;
         }
         baseState.state = getFactState().getState();
-        Log.v(TAG, "Evaluating: " + formatState(baseState.state));
+        Log.v(TAG, "Evaluating: ", formatState(baseState.state));
         int evaluatedMask = 1;
         final int ruleCount = ruleBase.rules.size();
         for (int i = 0; i < ruleCount; ++i) {
@@ -144,13 +145,13 @@ public class BreadthFirstRuleEngine extends RuleEngine {
                 if (rule.eval(baseState.state)) {
                     if (rule.matchType == Rule.MATCH_ALWAYS
                             || (ruleMatchState & evaluatedMask) == 0) {
-                        Log.v(TAG, "Rule fired: " + rule);
+                        Log.v(TAG, "Rule fired: ", rule);
                         ruleMatchState |= evaluatedMask;
                         rule.ruleAction.fire(baseState, getFactState());
                     }
                 } else if (rule.matchType == Rule.MATCH_RESET
                         && (ruleMatchState & evaluatedMask) != 0) {
-                    Log.v(TAG, "Rule reset: " + rule);
+                    Log.v(TAG, "Rule reset: ", rule);
                     ruleMatchState ^= evaluatedMask;
                 }
             }
