@@ -1,5 +1,5 @@
 # Android Rulez
-#### An efficient rule engine for Android
+#### Utility classes for an efficient Android rule engine
 
 Ready for production use.
 
@@ -7,7 +7,11 @@ I have found the rule engine a great pattern for Android app initialization hand
 which commonly has to deal with somewhat complex asynchronous process flow and event handling
 for API initialization. It is a generic rule engine, so it can be used for many other purposes.
 
-Please see the [blog entry](http://android.bubenheimer.com/2016/02/android-rulez-efficient-rule-engine-for.html)
+This project just adds a few convenient Android-specific classes to the generic Java rule engine.
+That project's source is found at (https://github.com/bubenheimer/androidrulez).
+
+Please see the
+[blog entry](http://android.bubenheimer.com/2016/02/android-rulez-efficient-rule-engine-for.html)
 for more information including a presentation from DevFest MN 2016.
 
 
@@ -15,7 +19,7 @@ for more information including a presentation from DevFest MN 2016.
 License
 -------
 
-    Copyright (c) 2016 Uli Bubenheimer
+    Copyright (c) 2015-2017 Uli Bubenheimer
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

@@ -47,8 +47,8 @@ android {
     }
 
     dependencies {
+        compile 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
         compile 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
-
         compile 'com.android.support:support-annotations:25.1.0'
     }
 }
