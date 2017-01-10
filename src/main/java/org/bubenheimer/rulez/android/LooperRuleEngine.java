@@ -13,15 +13,16 @@ import android.support.annotation.RestrictTo;
 import org.bubenheimer.rulez.BreadthFirstRuleEngine;
 
 /**
- * <p>A variation of {@link BreadthFirstRuleEngine} where rule evaluations are scheduled for a
- * {@link Handler} to execute at the next opportunity.</p>
+ * <p>A variation of {@link BreadthFirstRuleEngine} where rule evaluations are scheduled via the
+ * current thread's {@link android.os.Looper}. This allows running the rule engine on the UI thread
+ * without blocking, as long as rule actions are non-blocking.</p>
  *
  * <p>Also provides functionality to save and restore rule engine state.</p>
  *
  * <p>Not thread-safe. Typically used on the UI thread.</p>
  */
 @SuppressWarnings("unused")
-public class AndroidRuleEngine extends BreadthFirstRuleEngine {
+public class LooperRuleEngine extends BreadthFirstRuleEngine {
     /**
      * Instance state key for saving fact state.
      */
@@ -35,6 +36,11 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
      * Indicates whether an evaluation of the rule base has been scheduled due to changed state.
      */
     private boolean evaluationScheduled = false;
+
+    /**
+     * Indicates whether evaluation of the rule base is paused. Evaluation is paused initially.
+     */
+    private boolean evaluationResumed = false;
 
     /**
      * The {@link Runnable} to post for scheduling rule evaluation.
@@ -74,31 +80,62 @@ public class AndroidRuleEngine extends BreadthFirstRuleEngine {
     }
 
     /**
-     * Start rule base evaluation. Should be invoked from {@link Activity#onStart()} or equivalent
-     * methods in {@code Activity} or {@code Fragment} classes.
+     * Resumes rule base evaluation. Should be invoked from {@link Activity#onResume()},
+     * {@link Activity#onStart()}, or similar methods. Rule base evaluation is paused initially.
      */
-    @SuppressWarnings("unused")
-    public void start() {
-        scheduleEvaluation();
+    public void resumeEvaluation() {
+        if (evaluationResumed) {
+            return;
+        }
+
+        evaluationResumed = true;
+        if (evaluationScheduled) {
+            handler.post(evaluator);
+        }
     }
 
     /**
-     * Ends rule base evaluation. Should be invoked from {@link Activity#onStop()} or equivalent
-     * methods in {@code Activity} or {@code Fragment} classes.
+     * Pauses rule base evaluation. Should be invoked from {@link Activity#onPause()},
+     * {@link Activity#onStop()}, or similar methods. Rule base evaluation is paused initially.
      */
-    public void stop() {
-        handler.removeCallbacks(evaluator);
-        evaluationScheduled = false;
+    public void pauseEvaluation() {
+        if (!evaluationResumed) {
+            return;
+        }
+
+        evaluationResumed = false;
+        if (evaluationScheduled) {
+            handler.removeCallbacks(evaluator);
+        }
     }
 
+    /**
+     * Schedules rule evaluation.
+     */
     @Override
-    protected void scheduleEvaluation() {
+    public void scheduleEvaluation() {
         if (evaluationScheduled) {
             return;
         }
 
-        handler.post(evaluator);
         evaluationScheduled = true;
+        if (evaluationResumed) {
+            handler.post(evaluator);
+        }
+    }
+
+    /**
+     * Unschedules rule evaluation. It should not typically be necessary to call this method.
+     */
+    public void unscheduleEvaluation() {
+        if (!evaluationScheduled) {
+            return;
+        }
+
+        evaluationScheduled = false;
+        if (evaluationResumed) {
+            handler.removeCallbacks(evaluator);
+        }
     }
 
     /**
