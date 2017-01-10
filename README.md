@@ -8,7 +8,7 @@ which commonly has to deal with somewhat complex asynchronous process flow and e
 for API initialization. It is a generic rule engine, so it can be used for many other purposes.
 
 This project just adds a few convenient Android-specific classes to the generic Java rule engine.
-That project's source is found at (https://github.com/bubenheimer/androidrulez).
+That project's source is found at https://github.com/bubenheimer/javarulez.
 
 Please see the
 [blog entry](http://android.bubenheimer.com/2016/02/android-rulez-efficient-rule-engine-for.html)
