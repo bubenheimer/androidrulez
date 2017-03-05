@@ -7,7 +7,7 @@ buildscript {
         maven { url MAVEN_REPOSITORY_URL}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta1'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
@@ -27,7 +27,6 @@ android {
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 25
         versionCode 1
         versionName '1.0'
     }
@@ -49,7 +48,7 @@ android {
     dependencies {
         compile 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
         compile 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
-        compile 'com.android.support:support-annotations:25.1.0'
+        compile 'com.android.support:support-annotations:25.2.0'
     }
 }
 
