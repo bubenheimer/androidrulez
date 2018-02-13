@@ -7,7 +7,7 @@ buildscript {
         maven { url MAVEN_REPOSITORY_URL}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:' + ANDROID_STUDIO_VERSION
     }
 }
 
@@ -29,6 +29,7 @@ android {
         versionCode 1
         versionName '1.0'
     }
+
     buildTypes {
         debug {
         }
@@ -39,9 +40,15 @@ android {
             renderscriptDebuggable false
         }
     }
+
     compileOptions {
       sourceCompatibility JavaVersion.VERSION_1_8
       targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // TODO change based on resolution of https://issuetracker.google.com/issues/72050365
+    libraryVariants.all {
+        it.generateBuildConfig.enabled = false
     }
 
     dependencies {
