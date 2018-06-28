@@ -8,7 +8,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-beta01'
+        classpath 'com.android.tools.build:gradle:3.2.0-beta02'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
@@ -19,28 +20,10 @@ repositories {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
+apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'org.bubenheimer'
 version = '1.0-SNAPSHOT'
-
-publishing {
-    publications {
-        library(MavenPublication) {
-            artifact bundleReleaseAar
-
-            pom.withXml {
-                def deps = asNode().appendNode('dependencies')
-
-                // Give users access to BreadthFirstRuleEngine, etc.
-                def javarulez = deps.appendNode('dependency')
-                javarulez.appendNode('groupId', 'org.bubenheimer')
-                javarulez.appendNode('artifactId', 'javarulez')
-                javarulez.appendNode('version', '1.0-SNAPSHOT')
-            }
-        }
-    }
-}
 
 android {
     lintOptions {
@@ -78,7 +61,8 @@ android {
     }
 
     dependencies {
-        implementation 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
+        // Give users access to BreadthFirstRuleEngine, etc.
+        api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
         implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
         implementation 'com.android.support:support-annotations:28.0.0-alpha1'
     }
