@@ -5,10 +5,11 @@
 package org.bubenheimer.rulez.android;
 
 import android.os.AsyncTask;
-import android.support.annotation.RestrictTo;
 
 import org.bubenheimer.rulez.Fact;
 import org.bubenheimer.rulez.FactState;
+
+import androidx.annotation.RestrictTo;
 
 public abstract class RuleEngineAsyncTask<Params, Progress, Result>
         extends AsyncTask<Params, Progress, Result> {
