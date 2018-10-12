@@ -6,10 +6,12 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha13'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
     }
 }
 
@@ -21,6 +23,7 @@ repositories {
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'net.ltgt.errorprone'
 
 group = 'org.bubenheimer'
 version = '1.0-SNAPSHOT'
@@ -51,19 +54,21 @@ android {
     }
 
     compileOptions {
-      sourceCompatibility JavaVersion.VERSION_1_8
-      targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     // TODO change based on resolution of https://issuetracker.google.com/issues/72050365
     libraryVariants.all {
         it.generateBuildConfig.enabled = false
     }
+}
 
-    dependencies {
-        // Give users access to BreadthFirstRuleEngine, etc.
-        api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
-        implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
-        implementation 'androidx.annotation:annotation:1.0.0'
-    }
+dependencies {
+    errorprone 'com.google.errorprone:error_prone_core:2.3.2'
+
+    // Give users access to BreadthFirstRuleEngine, etc.
+    api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
+    implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
+    implementation 'androidx.annotation:annotation:1.0.0'
 }
