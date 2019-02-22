@@ -12,7 +12,7 @@ import org.bubenheimer.rulez.PersistenceStore;
 /**
  * Persistence store to support {@link Fact#PERSISTENCE_DISK} based on {@link SharedPreferences}.
  */
-public final class SharedPreferencesPersistenceStore implements PersistenceStore {
+public class SharedPreferencesPersistenceStore implements PersistenceStore {
     private final SharedPreferences sharedPreferences;
 
     /**
