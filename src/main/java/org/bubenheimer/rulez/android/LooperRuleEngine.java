@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 
+import org.bubenheimer.android.threading.HandlerUtil;
 import org.bubenheimer.rulez.BreadthFirstRuleEngine;
 
 import androidx.annotation.NonNull;
@@ -50,7 +51,7 @@ public class LooperRuleEngine extends BreadthFirstRuleEngine {
     /**
      * The {@link Handler} to post to.
      */
-    private final Handler handler = new Handler();
+    private final Handler handler = HandlerUtil.INSTANCE.createAsync();
 
     @SuppressWarnings("unused")
     @RestrictTo(RestrictTo.Scope.SUBCLASSES)
