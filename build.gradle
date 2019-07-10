@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        android_plugin_version = '3.6.0-alpha02'
+        android_plugin_version = '3.6.0-alpha04'
     }
 
     repositories {
@@ -50,10 +50,10 @@ android {
         baseline file('lint-baseline.xml')
     }
 
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
-        targetSdkVersion 28
+        targetSdkVersion 29
         minSdkVersion 14
         versionCode 1
         versionName '1.0'
@@ -90,5 +90,5 @@ dependencies {
     api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
     implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
 
-    implementation 'androidx.annotation:annotation:1.0.1'
+    implementation 'androidx.annotation:annotation:1.1.0-beta01'
 }
