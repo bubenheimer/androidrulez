@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        android_plugin_version = '3.6.0-alpha04'
+        android_plugin_version = '4.0.0-alpha06'
     }
 
     repositories {
@@ -28,7 +28,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.8'
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:1.1.1'
     }
 }
 
@@ -75,14 +75,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // TODO change based on resolution of https://issuetracker.google.com/issues/72050365
-    libraryVariants.all {
-        it.generateBuildConfig.enabled = false
+    buildFeatures {
+        buildConfig false
     }
 }
 
 dependencies {
-    errorprone 'com.google.errorprone:error_prone_core:2.3.3'
+    errorprone 'com.google.errorprone:error_prone_core:2.3.4'
     //noinspection GradleDynamicVersion
     errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
 
