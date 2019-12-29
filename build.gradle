@@ -98,7 +98,7 @@ publishing {
             afterEvaluate {
                 from components.release
             }
-            artifactId = 'androidrulez'
+            artifactId = project.name
         }
     }
 }
