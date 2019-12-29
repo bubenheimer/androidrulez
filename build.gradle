@@ -27,7 +27,6 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:1.1.1'
     }
 }
@@ -39,7 +38,7 @@ repositories {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
 apply plugin: 'net.ltgt.errorprone'
 
 group = 'org.bubenheimer'
@@ -78,16 +77,28 @@ android {
     buildFeatures {
         buildConfig false
     }
+
+    dependencies {
+        errorprone 'com.google.errorprone:error_prone_core:2.3.4'
+        //noinspection GradleDynamicVersion
+        errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
+
+        // Give users access to BreadthFirstRuleEngine, etc.
+        api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
+        implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
+
+        implementation 'androidx.annotation:annotation:1.1.0'
+    }
 }
 
-dependencies {
-    errorprone 'com.google.errorprone:error_prone_core:2.3.4'
-    //noinspection GradleDynamicVersion
-    errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
 
-    // Give users access to BreadthFirstRuleEngine, etc.
-    api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
-    implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
-
-    implementation 'androidx.annotation:annotation:1.1.0'
+publishing {
+    publications {
+        release(MavenPublication) {
+            afterEvaluate {
+                from components.release
+            }
+            artifactId = 'androidrulez'
+        }
+    }
 }
