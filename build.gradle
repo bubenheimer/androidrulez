@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        android_plugin_version = '4.0.0-alpha06'
+        android_plugin_version = '4.0.0-alpha07'
     }
 
     repositories {
