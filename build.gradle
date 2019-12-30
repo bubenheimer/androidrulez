@@ -79,6 +79,8 @@ android {
     }
 
     dependencies {
+        String lifecycle = "2.2.0-rc03"
+
         errorprone 'com.google.errorprone:error_prone_core:2.3.4'
         //noinspection GradleDynamicVersion
         errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
@@ -88,9 +90,13 @@ android {
         implementation 'org.bubenheimer:androidutil:1.0-SNAPSHOT'
 
         implementation 'androidx.annotation:annotation:1.1.0'
+
+        implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle"
+        implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle"
+
+        implementation 'androidx.savedstate:savedstate:1.0.0'
     }
 }
-
 
 publishing {
     publications {
