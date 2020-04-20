@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 Uli Bubenheimer
+ * Copyright (c) 2015-2020 Uli Bubenheimer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        android_plugin_version = '4.0.0-alpha07'
+        android_plugin_version = '4.1.0-alpha06'
     }
 
     repositories {
@@ -79,7 +79,7 @@ android {
     }
 
     dependencies {
-        String lifecycle = "2.2.0-rc03"
+        String lifecycle = "2.2.0"
 
         errorprone 'com.google.errorprone:error_prone_core:2.3.4'
         //noinspection GradleDynamicVersion
