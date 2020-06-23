@@ -17,7 +17,7 @@
 
 buildscript {
     ext {
-        android_plugin_version = '4.1.0-alpha06'
+        android_plugin_version = '4.1.0-beta01'
     }
 
     repositories {
@@ -49,10 +49,10 @@ android {
         baseline file('lint-baseline.xml')
     }
 
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
-        targetSdkVersion 29
+        targetSdkVersion 30
         minSdkVersion 14
         versionCode 1
         versionName '1.0'
