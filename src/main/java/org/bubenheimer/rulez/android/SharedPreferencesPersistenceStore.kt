@@ -14,48 +14,36 @@
  * limitations under the License.
  *
  */
+package org.bubenheimer.rulez.android
 
-package org.bubenheimer.rulez.android;
-
-import android.content.SharedPreferences;
-
-import org.bubenheimer.rulez.Fact;
-import org.bubenheimer.rulez.PersistenceStore;
+import android.content.SharedPreferences
+import androidx.core.content.edit
+import org.bubenheimer.rulez.PersistenceStore
 
 /**
- * Persistence store to support {@link Fact#PERSISTENCE_DISK} based on {@link SharedPreferences}.
+ * Persistence store to support [Fact.PERSISTENCE_DISK] based on [SharedPreferences].
  */
-public class SharedPreferencesPersistenceStore implements PersistenceStore {
-    private final SharedPreferences sharedPreferences;
-
+open class SharedPreferencesPersistenceStore
+/**
+ * Constructor
+ * @param sharedPreferences store to use. Ideally this should be a dedicated
+ * [SharedPreferences] file to prevent key name conflicts.
+ */
+(private val sharedPreferences: SharedPreferences) : PersistenceStore {
     /**
-     * Constructor
-     * @param sharedPreferences store to use. Ideally this should be a dedicated
-     *                          {@link SharedPreferences} file to prevent key name conflicts.
-     */
-    public SharedPreferencesPersistenceStore(final SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
-    }
-
-    /**
-     * Retrieve fact value from {@link SharedPreferences}
+     * Retrieve fact value from [SharedPreferences]
      * @param id    unique fact ID
      * @param name  unique fact name
      * @return fact value
      */
-    @Override
-    public boolean get(final int id, final String name) {
-        return sharedPreferences.getBoolean(name, false);
-    }
+    override fun get(id: Int, name: String): Boolean = sharedPreferences.getBoolean(name, false)
 
     /**
-     * Set fact value in {@link SharedPreferences}
+     * Set fact value in [SharedPreferences]
      * @param id    unique fact ID
      * @param name  unique fact name
      * @param value fact value
      */
-    @Override
-    public void set(final int id, final String name, final boolean value) {
-        sharedPreferences.edit().putBoolean(name, value).apply();
-    }
+    override fun set(id: Int, name: String, value: Boolean) =
+            sharedPreferences.edit { putBoolean(name, value) }
 }

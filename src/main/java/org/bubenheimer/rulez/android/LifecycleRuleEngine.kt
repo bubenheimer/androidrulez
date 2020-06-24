@@ -14,67 +14,38 @@
  * limitations under the License.
  *
  */
+package org.bubenheimer.rulez.android
 
-package org.bubenheimer.rulez.android;
-
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.savedstate.SavedStateRegistry;
+import android.os.Bundle
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.savedstate.SavedStateRegistry
 
 /**
  * A variation of the rule engine leveraging Lifecycle and SavedState.
  */
-@SuppressWarnings("unused")
-public class LifecycleRuleEngine extends LooperRuleEngine implements DefaultLifecycleObserver {
-    private static final String SAVED_STATE_KEY = "LifecycleRuleEngine.key";
-
-    private final SavedStateRegistry savedStateRegistry;
-
-    public LifecycleRuleEngine(
-            final SavedStateRegistry savedStateRegistry
-    ) {
-        this.savedStateRegistry = savedStateRegistry;
+open class LifecycleRuleEngine(private val savedStateRegistry: SavedStateRegistry) :
+        LooperRuleEngine(), DefaultLifecycleObserver {
+    private companion object {
+        private const val SAVED_STATE_KEY = "LifecycleRuleEngine.key"
     }
 
-    @Override
-    public void onCreate(
-            final @NonNull LifecycleOwner owner
-    ) {
-        final Bundle bundle = savedStateRegistry.consumeRestoredStateForKey(SAVED_STATE_KEY);
-        if (bundle != null) {
-            restoreInstanceState(bundle);
+    override fun onCreate(owner: LifecycleOwner) {
+        val bundle = savedStateRegistry.consumeRestoredStateForKey(SAVED_STATE_KEY)
+        bundle?.let { restoreInstanceState(it) }
+
+        savedStateRegistry.registerSavedStateProvider(SAVED_STATE_KEY) {
+            val b = Bundle(2)
+            saveInstanceState(b)
+            b
         }
-
-        savedStateRegistry.registerSavedStateProvider(SAVED_STATE_KEY, () -> {
-            final Bundle b = new Bundle(2);
-            saveInstanceState(b);
-            return b;
-        });
-
-        scheduleEvaluation();
+        scheduleEvaluation()
     }
 
-    @Override
-    public void onDestroy(
-            final @NonNull LifecycleOwner owner
-    ) {
-        savedStateRegistry.unregisterSavedStateProvider(SAVED_STATE_KEY);
-    }
+    override fun onDestroy(owner: LifecycleOwner) =
+            savedStateRegistry.unregisterSavedStateProvider(SAVED_STATE_KEY)
 
-    @Override
-    public void onStart(
-            final @NonNull LifecycleOwner owner
-    ) {
-        resumeEvaluation();
-    }
+    override fun onStart(owner: LifecycleOwner) = resumeEvaluation()
 
-    @Override
-    public void onStop(
-            final @NonNull LifecycleOwner owner
-    ) {
-        pauseEvaluation();
-    }
+    override fun onStop(owner: LifecycleOwner) = pauseEvaluation()
 }

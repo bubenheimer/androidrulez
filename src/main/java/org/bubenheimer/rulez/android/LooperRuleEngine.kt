@@ -14,159 +14,141 @@
  * limitations under the License.
  *
  */
+package org.bubenheimer.rulez.android
 
-package org.bubenheimer.rulez.android;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.os.Handler;
-
-import org.bubenheimer.android.threading.HandlerUtil;
-import org.bubenheimer.rulez.BreadthFirstRuleEngine;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RestrictTo;
+import android.os.Bundle
+import android.os.Handler
+import org.bubenheimer.android.threading.HandlerUtil.createAsync
+import org.bubenheimer.rulez.BreadthFirstRuleEngine
 
 /**
- * <p>A variation of {@link BreadthFirstRuleEngine} where rule evaluations are scheduled via the
- * current thread's {@link android.os.Looper}. This allows running the rule engine on the UI thread
- * without blocking, as long as rule actions are non-blocking.</p>
  *
- * <p>Also provides functionality to save and restore rule engine state.</p>
+ * A variation of [BreadthFirstRuleEngine] where rule evaluations are scheduled via the
+ * current thread's [android.os.Looper]. This allows running the rule engine on the UI thread
+ * without blocking, as long as rule actions are non-blocking.
  *
- * <p>Not thread-safe. Typically used on the UI thread.</p>
+ *
+ * Also provides functionality to save and restore rule engine state.
+ *
+ *
+ * Not thread-safe. Typically used on the UI thread.
  */
-@SuppressWarnings("unused")
-public class LooperRuleEngine extends BreadthFirstRuleEngine {
-    /**
-     * Instance state key for saving fact state.
-     */
-    private static final String INSTANCE_STATE_RULE_ENGINE_FACTS = "rule_engine_fact_state";
-    /**
-     * Instance state key for saving rule execution state.
-     */
-    private static final String INSTANCE_STATE_RULE_ENGINE_EVAL = "rule_engine_eval_state";
+open class LooperRuleEngine : BreadthFirstRuleEngine() {
+    private companion object {
+        /**
+         * Instance state key for saving fact state.
+         */
+        private const val INSTANCE_STATE_RULE_ENGINE_FACTS = "rule_engine_fact_state"
+
+        /**
+         * Instance state key for saving rule execution state.
+         */
+        private const val INSTANCE_STATE_RULE_ENGINE_EVAL = "rule_engine_eval_state"
+    }
 
     /**
      * Indicates whether an evaluation of the rule base has been scheduled due to changed state.
      */
-    private boolean evaluationScheduled = false;
+    private var evaluationScheduled = false
 
     /**
      * Indicates whether evaluation of the rule base is paused. Evaluation is paused initially.
      */
-    private boolean evaluationResumed = false;
+    private var evaluationResumed = false
 
     /**
-     * The {@link Runnable} to post for scheduling rule evaluation.
+     * The [Runnable] to post for scheduling rule evaluation.
      */
-    private Runnable evaluator = new Evaluator();
-    /**
-     * The {@link Handler} to post to.
-     */
-    private final Handler handler = HandlerUtil.INSTANCE.createAsync();
+    protected var evaluator: Runnable = Evaluator()
 
-    @SuppressWarnings("unused")
-    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
-    protected final void setEvaluator(final Runnable evaluator) {
-        this.evaluator = evaluator;
-    }
+    /**
+     * The [Handler] to post to.
+     */
+    private val handler = createAsync()
 
     /**
      * Restores rule engine state.
      * @param savedInstanceState the saved state
      */
-    @SuppressWarnings("unused")
-    public void restoreInstanceState(@NonNull final Bundle savedInstanceState) {
-        final int factState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_FACTS, 0);
-        final int evalState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_EVAL, 0);
-        getFactState().setState(factState);
-        setRuleMatchState(evalState);
+    fun restoreInstanceState(savedInstanceState: Bundle) {
+        val factState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_FACTS, 0)
+        val evalState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_EVAL, 0)
+        getFactState().state = factState
+        ruleMatchState = evalState
     }
 
     /**
      * Saves rule engine state.
      * @param outState the saved state
      */
-    @SuppressWarnings("unused")
-    public void saveInstanceState(@NonNull final Bundle outState) {
-        outState.putInt(INSTANCE_STATE_RULE_ENGINE_FACTS, getFactState().getState());
-        outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, getRuleMatchState());
+    fun saveInstanceState(outState: Bundle) {
+        outState.putInt(INSTANCE_STATE_RULE_ENGINE_FACTS, factState.state)
+        outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, ruleMatchState)
     }
 
     /**
-     * Resumes rule base evaluation. Should be invoked from {@link Activity#onResume()},
-     * {@link Activity#onStart()}, or similar methods. Rule base evaluation is paused initially.
+     * Resumes rule base evaluation. Should be invoked from [Activity.onResume],
+     * [Activity.onStart], or similar methods. Rule base evaluation is paused initially.
      */
-    public void resumeEvaluation() {
+    fun resumeEvaluation() {
         if (evaluationResumed) {
-            return;
+            return
         }
-
-        evaluationResumed = true;
+        evaluationResumed = true
         if (evaluationScheduled) {
-            handler.post(evaluator);
+            handler.post(evaluator)
         }
     }
 
     /**
-     * Pauses rule base evaluation. Should be invoked from {@link Activity#onPause()},
-     * {@link Activity#onStop()}, or similar methods. Rule base evaluation is paused initially.
+     * Pauses rule base evaluation. Should be invoked from [Activity.onPause],
+     * [Activity.onStop], or similar methods. Rule base evaluation is paused initially.
      */
-    public void pauseEvaluation() {
+    fun pauseEvaluation() {
         if (!evaluationResumed) {
-            return;
+            return
         }
-
-        evaluationResumed = false;
+        evaluationResumed = false
         if (evaluationScheduled) {
-            handler.removeCallbacks(evaluator);
+            handler.removeCallbacks(evaluator)
         }
     }
 
     /**
      * Schedules rule evaluation.
      */
-    @Override
-    public void scheduleEvaluation() {
+    public override fun scheduleEvaluation() {
         if (evaluationScheduled) {
-            return;
+            return
         }
-
-        evaluationScheduled = true;
+        evaluationScheduled = true
         if (evaluationResumed) {
-            handler.post(evaluator);
+            handler.post(evaluator)
         }
     }
 
     /**
      * Unschedules rule evaluation. It should not typically be necessary to call this method.
      */
-    public void unscheduleEvaluation() {
+    fun unscheduleEvaluation() {
         if (!evaluationScheduled) {
-            return;
+            return
         }
-
-        evaluationScheduled = false;
+        evaluationScheduled = false
         if (evaluationResumed) {
-            handler.removeCallbacks(evaluator);
+            handler.removeCallbacks(evaluator)
         }
     }
 
     /**
-     * The {@link Runnable} to execute for rule base evaluation.
+     * The [Runnable] to execute for rule base evaluation.
      */
-    @SuppressWarnings("WeakerAccess")
-    @RestrictTo(RestrictTo.Scope.SUBCLASSES)
-    protected class Evaluator implements Runnable {
-        @Override
-        public void run() {
-            evaluationScheduled = false;
-
-            evaluate();
-
+    protected open inner class Evaluator : Runnable {
+        override fun run() {
+            evaluationScheduled = false
+            evaluate()
             if (!evaluationScheduled) {
-                handleEvaluationEnd();
+                handleEvaluationEnd()
             }
         }
     }
