@@ -28,7 +28,6 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$android_plugin_version"
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:1.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -42,7 +41,6 @@ repositories {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
-apply plugin: 'net.ltgt.errorprone'
 
 group = 'org.bubenheimer'
 version = '1.0-SNAPSHOT'
@@ -82,10 +80,6 @@ android {
 
     dependencies {
         String lifecycle = "2.2.0"
-
-        errorprone 'com.google.errorprone:error_prone_core:2.3.4'
-        //noinspection GradleDynamicVersion
-        errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
 
         // Give users access to BreadthFirstRuleEngine, etc.
         api 'org.bubenheimer:javarulez:1.0-SNAPSHOT'
