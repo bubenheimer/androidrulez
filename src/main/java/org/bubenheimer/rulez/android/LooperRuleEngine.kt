@@ -33,7 +33,8 @@ import org.bubenheimer.rulez.BreadthFirstRuleEngine
  *
  * Not thread-safe. Typically used on the UI thread.
  */
-open class LooperRuleEngine : BreadthFirstRuleEngine() {
+open class LooperRuleEngine(private val evaluationListener: (LooperRuleEngine.() -> Unit)? = null) :
+    BreadthFirstRuleEngine() {
     private companion object {
         /**
          * Instance state key for saving fact state.
@@ -57,9 +58,17 @@ open class LooperRuleEngine : BreadthFirstRuleEngine() {
     private var evaluationResumed = false
 
     /**
-     * The [Runnable] to post for scheduling rule evaluation.
+     * The function to post for scheduling rule evaluation.
      */
-    protected var evaluator: Runnable = Evaluator()
+    private val evaluator: () -> Unit = {
+        evaluationScheduled = false
+        evaluate()
+        if (!evaluationScheduled) {
+            handleEvaluationEnd()
+        }
+
+        evaluationListener?.invoke(this)
+    }
 
     /**
      * The [Handler] to post to.
@@ -137,19 +146,6 @@ open class LooperRuleEngine : BreadthFirstRuleEngine() {
         evaluationScheduled = false
         if (evaluationResumed) {
             handler.removeCallbacks(evaluator)
-        }
-    }
-
-    /**
-     * The [Runnable] to execute for rule base evaluation.
-     */
-    protected open inner class Evaluator : Runnable {
-        override fun run() {
-            evaluationScheduled = false
-            evaluate()
-            if (!evaluationScheduled) {
-                handleEvaluationEnd()
-            }
         }
     }
 }

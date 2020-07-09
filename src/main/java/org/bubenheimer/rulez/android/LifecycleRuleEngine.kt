@@ -24,8 +24,10 @@ import androidx.savedstate.SavedStateRegistry
 /**
  * A variation of the rule engine leveraging Lifecycle and SavedState.
  */
-open class LifecycleRuleEngine(private val savedStateRegistry: SavedStateRegistry) :
-        LooperRuleEngine(), DefaultLifecycleObserver {
+open class LifecycleRuleEngine(
+    private val savedStateRegistry: SavedStateRegistry,
+    evaluationListener: (LooperRuleEngine.() -> Unit)? = null
+) : LooperRuleEngine(evaluationListener), DefaultLifecycleObserver {
     private companion object {
         private const val SAVED_STATE_KEY = "LifecycleRuleEngine.key"
     }
@@ -43,7 +45,7 @@ open class LifecycleRuleEngine(private val savedStateRegistry: SavedStateRegistr
     }
 
     override fun onDestroy(owner: LifecycleOwner) =
-            savedStateRegistry.unregisterSavedStateProvider(SAVED_STATE_KEY)
+        savedStateRegistry.unregisterSavedStateProvider(SAVED_STATE_KEY)
 
     override fun onStart(owner: LifecycleOwner) = resumeEvaluation()
 
