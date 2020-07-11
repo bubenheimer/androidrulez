@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 Uli Bubenheimer
+ * Copyright (c) 2015-2020 Uli Bubenheimer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,36 +16,25 @@
  */
 package org.bubenheimer.rulez.android
 
-import android.os.Bundle
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.savedstate.SavedStateRegistry
+import org.bubenheimer.rulez.base.Fact
+import org.bubenheimer.rulez.base.FactState
+import org.bubenheimer.rulez.base.Rule
+import org.bubenheimer.rulez.base.RuleBase
 
 /**
  * A variation of the rule engine leveraging Lifecycle and SavedState.
  */
-open class LifecycleRuleEngine(
-    private val savedStateRegistry: SavedStateRegistry,
-    evaluationListener: (LooperRuleEngine.() -> Unit)? = null
-) : LooperRuleEngine(evaluationListener), DefaultLifecycleObserver {
-    private companion object {
-        private const val SAVED_STATE_KEY = "LifecycleRuleEngine.key"
-    }
-
+open class LifecycleRuleEngine<F : Fact, R : Rule<F>>(
+    factState: FactState<F>,
+    ruleBase: RuleBase<F, R>,
+//    ruleMatchState: Int = 0,
+    evaluationListener: (LooperRuleEngine<F, R>.() -> Unit)? = null
+) : LooperRuleEngine<F, R>(factState, ruleBase, evaluationListener), DefaultLifecycleObserver {
     override fun onCreate(owner: LifecycleOwner) {
-        val bundle = savedStateRegistry.consumeRestoredStateForKey(SAVED_STATE_KEY)
-        bundle?.let { restoreInstanceState(it) }
-
-        savedStateRegistry.registerSavedStateProvider(SAVED_STATE_KEY) {
-            val b = Bundle(2)
-            saveInstanceState(b)
-            b
-        }
         scheduleEvaluation()
     }
-
-    override fun onDestroy(owner: LifecycleOwner) =
-        savedStateRegistry.unregisterSavedStateProvider(SAVED_STATE_KEY)
 
     override fun onStart(owner: LifecycleOwner) = resumeEvaluation()
 

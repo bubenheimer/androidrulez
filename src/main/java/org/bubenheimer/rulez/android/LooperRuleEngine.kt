@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2019 Uli Bubenheimer
+ * Copyright (c) 2015-2020 Uli Bubenheimer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,15 @@
  */
 package org.bubenheimer.rulez.android
 
-import android.os.Bundle
 import android.os.Handler
 import org.bubenheimer.android.threading.HandlerUtil.createAsync
 import org.bubenheimer.rulez.BreadthFirstRuleEngine
+import org.bubenheimer.rulez.base.Fact
+import org.bubenheimer.rulez.base.FactState
+import org.bubenheimer.rulez.base.Rule
+import org.bubenheimer.rulez.base.RuleBase
 
 /**
- *
  * A variation of [BreadthFirstRuleEngine] where rule evaluations are scheduled via the
  * current thread's [android.os.Looper]. This allows running the rule engine on the UI thread
  * without blocking, as long as rule actions are non-blocking.
@@ -33,19 +35,23 @@ import org.bubenheimer.rulez.BreadthFirstRuleEngine
  *
  * Not thread-safe. Typically used on the UI thread.
  */
-open class LooperRuleEngine(private val evaluationListener: (LooperRuleEngine.() -> Unit)? = null) :
-    BreadthFirstRuleEngine() {
-    private companion object {
-        /**
-         * Instance state key for saving fact state.
-         */
-        private const val INSTANCE_STATE_RULE_ENGINE_FACTS = "rule_engine_fact_state"
-
-        /**
-         * Instance state key for saving rule execution state.
-         */
-        private const val INSTANCE_STATE_RULE_ENGINE_EVAL = "rule_engine_eval_state"
-    }
+open class LooperRuleEngine<F : Fact, R : Rule<F>>(
+    factState: FactState<F>,
+    ruleBase: RuleBase<F, R>,
+//    ruleMatchState: Int = 0,
+    evaluationListener: (LooperRuleEngine<F, R>.() -> Unit)? = null
+) : BreadthFirstRuleEngine<F, R>(factState, ruleBase) {
+//    private companion object {
+//        /**
+//         * Instance state key for saving fact state.
+//         */
+//        private const val INSTANCE_STATE_RULE_ENGINE_FACTS = "rule_engine_fact_state"
+//
+//        /**
+//         * Instance state key for saving rule execution state.
+//         */
+//        private const val INSTANCE_STATE_RULE_ENGINE_EVAL = "rule_engine_eval_state"
+//    }
 
     /**
      * Indicates whether an evaluation of the rule base has been scheduled due to changed state.
@@ -75,29 +81,30 @@ open class LooperRuleEngine(private val evaluationListener: (LooperRuleEngine.()
      */
     private val handler = createAsync()
 
-    /**
-     * Restores rule engine state.
-     * @param savedInstanceState the saved state
-     */
-    fun restoreInstanceState(savedInstanceState: Bundle) {
-        val factState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_FACTS, 0)
-        val evalState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_EVAL, 0)
-        getFactState().state = factState
-        ruleMatchState = evalState
-    }
+    //TODO
+//    /**
+//     * Restores rule engine state.
+//     * @param savedInstanceState the saved state
+//     */
+//    fun restoreInstanceState(savedInstanceState: Bundle) {
+//        val factState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_FACTS, 0)
+//        val evalState = savedInstanceState.getInt(INSTANCE_STATE_RULE_ENGINE_EVAL, 0)
+//        getFactState().state = factState
+//        ruleMatchState = evalState
+//    }
+//
+//    /**
+//     * Saves rule engine state.
+//     * @param outState the saved state
+//     */
+//    fun saveInstanceState(outState: Bundle) {
+//        outState.putInt(INSTANCE_STATE_RULE_ENGINE_FACTS, factState.state)
+//        outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, ruleMatchState)
+//    }
 
     /**
-     * Saves rule engine state.
-     * @param outState the saved state
-     */
-    fun saveInstanceState(outState: Bundle) {
-        outState.putInt(INSTANCE_STATE_RULE_ENGINE_FACTS, factState.state)
-        outState.putInt(INSTANCE_STATE_RULE_ENGINE_EVAL, ruleMatchState)
-    }
-
-    /**
-     * Resumes rule base evaluation. Should be invoked from [Activity.onResume],
-     * [Activity.onStart], or similar methods. Rule base evaluation is paused initially.
+     * Resumes rule base evaluation. Should be invoked from [android.app.Activity.onResume],
+     * [android.app.Activity.onStart], or similar methods. Rule base evaluation is paused initially.
      */
     fun resumeEvaluation() {
         if (evaluationResumed) {
@@ -110,8 +117,8 @@ open class LooperRuleEngine(private val evaluationListener: (LooperRuleEngine.()
     }
 
     /**
-     * Pauses rule base evaluation. Should be invoked from [Activity.onPause],
-     * [Activity.onStop], or similar methods. Rule base evaluation is paused initially.
+     * Pauses rule base evaluation. Should be invoked from [android.app.Activity.onPause],
+     * [android.app.Activity.onStop], or similar methods. Rule base evaluation is paused initially.
      */
     fun pauseEvaluation() {
         if (!evaluationResumed) {
@@ -126,7 +133,7 @@ open class LooperRuleEngine(private val evaluationListener: (LooperRuleEngine.()
     /**
      * Schedules rule evaluation.
      */
-    public override fun scheduleEvaluation() {
+    override fun scheduleEvaluation() {
         if (evaluationScheduled) {
             return
         }
