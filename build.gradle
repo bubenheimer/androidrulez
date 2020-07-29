@@ -95,6 +95,14 @@ android {
 
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     }
+
+    task debugSourceJar(type: Jar) {
+        sourceSets {
+            from debug.java.srcDirs, main.java.srcDirs
+        }
+        //noinspection GroovyAccessibility
+        archiveClassifier = "sources"
+    }
 }
 
 publishing {
@@ -102,15 +110,17 @@ publishing {
         debug(MavenPublication) {
             afterEvaluate {
                 from components.debug
+                artifactId = "$project.name-debug"
+
+                artifact(debugSourceJar)
             }
-            artifactId = "$project.name-debug"
         }
 
         release(MavenPublication) {
             afterEvaluate {
                 from components.release
+                artifactId = "$project.name-release"
             }
-            artifactId = "$project.name-release"
         }
     }
 }
