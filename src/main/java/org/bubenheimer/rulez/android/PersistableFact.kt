@@ -17,46 +17,34 @@
 
 package org.bubenheimer.rulez.android
 
-import androidx.annotation.IntDef
-import org.bubenheimer.rulez.NamedFact
-import org.bubenheimer.rulez.base.FactBase
+import org.bubenheimer.rulez.facts.FactBase
+import org.bubenheimer.rulez.facts.NamedFact
 
 /**
  * A persistable named fact
- * @param id the internal fact id. All facts in a rule base must have distinct IDs.
- * @param name a unique fact name
- * @param persistence fact state persistence type
+ *
+ * @param factBase scope of [PersistableFact] for [PersistableFact.id] allocation and association
+ * with [RuleBase]
+ * @param name a fact name. Should be unique within [factBase] to properly support key
+ * generation.
  */
-class PersistableFact private constructor(
-    id: Int,
-    name: String,
-    @Persistence val persistence: Int = PERSISTENCE_NONE
-) : NamedFact(id, name) {
-    /**
-     * Persistence type. Specifies whether fact state is persistent or not.
-     */
-    @Retention(AnnotationRetention.SOURCE)
-    @IntDef(PERSISTENCE_NONE, PERSISTENCE_DISK)
-    annotation class Persistence
+@Suppress("KDocUnresolvedReference") // Android Studio bug workaround
+class PersistableFact constructor(
+    factBase: FactBase,
+    name: String
+) : NamedFact(factBase, name), Persistable {
+    override val key
+        get() = name
 
-    companion object {
-        /**
-         * No fact state persistence.
-         */
-        const val PERSISTENCE_NONE = 0
-
-        /**
-         * Fact state is persistent for the life of the app installation. Uninstalling the app or
-         * clearing app data clears fact state.
-         */
-        const val PERSISTENCE_DISK = 1
-    }
-
-    class FactCreator(
-        private val name: String,
-        @Persistence private val persistence: Int = PERSISTENCE_NONE
-    ) :
-        FactBase.FactCreator<PersistableFact> {
-        override fun create(id: Int) = PersistableFact(id, name, persistence)
-    }
+    override fun toString() = "$id: $name (persistable)"
 }
+
+/**
+ * Creates a new [PersistableFact]
+ *
+ * @receiver scope of [PersistableFact] for [PersistableFact.id] allocation and association with a
+ * rulebase.
+ * @param name a fact name. Should be unique within receiver [FactBase] to properly support key
+ * generation.
+ */
+fun FactBase.newPersistableFact(name: String) = PersistableFact(this, name)
