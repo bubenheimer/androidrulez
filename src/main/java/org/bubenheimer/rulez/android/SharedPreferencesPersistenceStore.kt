@@ -30,7 +30,7 @@ import org.bubenheimer.rulez.state.State
  * @param keyPrefix key name prefix to keep [Fact] keys unique in shared [sharedPreferences]
  * storage
  */
-open class SharedPreferencesPersistenceStore(
+public open class SharedPreferencesPersistenceStore(
     private val facts: Iterable<Fact>,
     private val sharedPreferences: SharedPreferences,
     private val keyPrefix: String
@@ -41,7 +41,7 @@ open class SharedPreferencesPersistenceStore(
      * @param initialState base [Fact] [State]. Restored [State] is applied on top.
      * @return the restored [State]
      */
-    fun restoreState(initialState: State = State.VOID): State {
+    public fun restoreState(initialState: State = State.VOID): State {
         return facts.fold(initialState) { state, fact ->
             if (fact is Persistable) {
                 val prefixedKey = prefixedKey(fact)
@@ -56,7 +56,7 @@ open class SharedPreferencesPersistenceStore(
     /**
      * Saves [Fact] state for all [facts]
      */
-    fun saveState(state: State) {
+    public fun saveState(state: State) {
         sharedPreferences.edit {
             facts.forEach {
                 if (it is Persistable) putBoolean(prefixedKey(it), state[it])
@@ -67,12 +67,12 @@ open class SharedPreferencesPersistenceStore(
     /**
      * Whether the store contains a value for a specific key
      */
-    open fun contains(key: String): Boolean = sharedPreferences.contains(key)
+    public open fun contains(key: String): Boolean = sharedPreferences.contains(key)
 
     /**
      * Gets a value for a specific key. Returns `false` is key is not present in store.
      */
-    open fun get(key: String): Boolean = sharedPreferences.getBoolean(key, false)
+    public open fun get(key: String): Boolean = sharedPreferences.getBoolean(key, false)
 
     /**
      * Creates a prefixed [fact] key

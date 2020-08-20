@@ -29,14 +29,14 @@ import org.bubenheimer.rulez.facts.NamedFact
  * generation.
  */
 @Suppress("KDocUnresolvedReference") // Android Studio bug workaround
-class PersistableFact constructor(
+public class PersistableFact constructor(
     factBase: FactBase,
     name: String
 ) : NamedFact(factBase, name), Persistable {
-    override val key
+    override val key: String
         get() = name
 
-    override fun toString() = "$id: $name (persistable)"
+    override fun toString(): String = "$id: $name (persistable)"
 }
 
 /**
@@ -47,4 +47,4 @@ class PersistableFact constructor(
  * @param name a fact name. Should be unique within receiver [FactBase] to properly support key
  * generation.
  */
-fun FactBase.newPersistableFact(name: String) = PersistableFact(this, name)
+public fun FactBase.newPersistableFact(name: String): PersistableFact = PersistableFact(this, name)

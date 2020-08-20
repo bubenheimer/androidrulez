@@ -20,9 +20,9 @@ package org.bubenheimer.rulez.android
 /**
  * Makes a [org.bubenheimer.rulez.facts.Fact] persistable
  */
-interface Persistable {
+public interface Persistable {
     /**
      * Storage key. Should be unique in a [org.bubenheimer.rulez.facts.FactBase].
      */
-    val key: String
+    public val key: String
 }

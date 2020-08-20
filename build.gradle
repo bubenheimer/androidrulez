@@ -71,7 +71,8 @@ android {
         noJdk = true // this seems to work, so keep it this way for now
         verbose = true
         freeCompilerArgs = [
-                "-progressive"
+                "-progressive",
+                "-Xexplicit-api=strict"
         ]
     }
 
