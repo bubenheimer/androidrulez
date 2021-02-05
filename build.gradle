@@ -69,6 +69,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
         noJdk = true // this seems to work, so keep it this way for now
+        useIR = true
         verbose = true
         freeCompilerArgs = [
                 "-progressive",
