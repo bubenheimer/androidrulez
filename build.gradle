@@ -17,8 +17,8 @@
 
 buildscript {
     ext {
-        android_plugin_version = '4.1.1'
-        ext.kotlin_version = '1.4.21'
+        android_plugin_version = '4.1.2'
+        ext.kotlin_version = '1.4.30'
     }
 
     repositories {
