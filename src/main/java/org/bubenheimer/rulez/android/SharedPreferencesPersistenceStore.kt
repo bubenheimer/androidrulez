@@ -58,9 +58,8 @@ public open class SharedPreferencesPersistenceStore(
      */
     public fun saveState(state: State) {
         sharedPreferences.edit {
-            facts.forEach {
-                if (it is Persistable) putBoolean(prefixedKey(it), state[it])
-            }
+            @Suppress("NewApi") // Lint is broken
+            facts.forEach { if (it is Persistable) putBoolean(prefixedKey(it), state[it]) }
         }
     }
 
