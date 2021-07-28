@@ -53,13 +53,12 @@ android {
         minSdkVersion 19
         versionCode 1
         versionName '1.0'
-        multiDexEnabled true
     }
 
     compileOptions {
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     buildTypes {
@@ -74,7 +73,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         noJdk = true // this seems to work, so keep it this way for now
         verbose = true
         freeCompilerArgs = [
