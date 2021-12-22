@@ -17,8 +17,8 @@
 
 buildscript {
     ext {
-        android_plugin_version = '7.0.2'
-        ext.kotlin_version = '1.5.31'
+        android_plugin_version = '7.0.4'
+        ext.kotlin_version = '1.6.10'
     }
 
     repositories {
@@ -118,9 +118,9 @@ android {
         // Give users access to ParallelRuleEngine, etc.
         api 'org.bubenheimer:kotlinrulez:1.0-SNAPSHOT'
 
-        implementation "androidx.core:core-ktx:1.6.0"
+        implementation "androidx.core:core-ktx:1.7.0"
 
-        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     }
 
     task debugSourceJar(type: Jar) {
